@@ -1,9 +1,11 @@
 package projekt.nieruchomosci.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import projekt.nieruchomosci.entity.Klient;
+import projekt.nieruchomosci.entity.Client;
 
-public interface ClientRepository  extends JpaRepository<Klient, Integer> {
+@Repository
+public interface ClientRepository  extends JpaRepository<Client, Integer> {
     
 }

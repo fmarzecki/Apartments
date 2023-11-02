@@ -4,10 +4,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "klienci")
-public class Klient {
+public class Client {
     
     @Id
     @Column(name = "id_kli")
@@ -28,11 +35,15 @@ public class Klient {
     @Column(name = "ulica")
     private String ulica;
 
+
     @Override
     public String toString() {
         return "Klient [id=" + id + ", imie=" + imie + ", nazwisko=" + nazwisko + ", nrDowodu=" + nrDowodu
                 + ", miejscowosc=" + miejscowosc + ", ulica=" + ulica + "]\n";
     }
+
+
+    
 
     
 

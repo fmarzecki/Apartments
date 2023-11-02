@@ -1,10 +1,30 @@
 package projekt.nieruchomosci.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import projekt.nieruchomosci.entity.Client;
+import projekt.nieruchomosci.service.ClientService;
 
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
     
+    public ClientService clientService;
+
+    @Autowired
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Client>> getAllClients() {
+        System.out.println(clientService.getAllClients());
+        return ResponseEntity.ok(clientService.getAllClients());
+    }
 }
