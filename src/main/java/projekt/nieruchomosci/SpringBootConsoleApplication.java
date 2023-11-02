@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-import projekt.nieruchomosci.dao.KlientRepozytorium;
+
+import projekt.nieruchomosci.dao.ClientRepository;
 
 @SpringBootApplication
 public class SpringBootConsoleApplication 
@@ -17,10 +17,10 @@ public class SpringBootConsoleApplication
     private static Logger LOG = LoggerFactory
       .getLogger(SpringBootConsoleApplication.class);
 
-      public KlientRepozytorium klientRepozytorium;
+      public ClientRepository klientRepozytorium;
 
       @Autowired
-      public SpringBootConsoleApplication(KlientRepozytorium klientRepozytorium) {
+      public SpringBootConsoleApplication(ClientRepository klientRepozytorium) {
         this.klientRepozytorium = klientRepozytorium;
       }
 
@@ -32,8 +32,6 @@ public class SpringBootConsoleApplication
  
     @Override
     public void run(String... args) {
-      // System.out.println(klientRepozytorium.findAll());
-      System.out.println("nodasdsaddas\ndsadsasdsa\ndasdas\nasdsad");
-
+      System.out.println(klientRepozytorium.findAll());
     }
 }
