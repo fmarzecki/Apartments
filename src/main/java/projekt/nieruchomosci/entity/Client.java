@@ -2,7 +2,10 @@ package projekt.nieruchomosci.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +20,7 @@ import lombok.NoArgsConstructor;
 public class Client {
     
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)  
     @Column(name = "id_kli")
     private int id;
 
@@ -43,8 +47,13 @@ public class Client {
     }
 
 
-    
+    public Client(String imie, String nazwisko, String nrDowodu, String miejscowosc, String ulica) {
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.nrDowodu = nrDowodu;
+        this.miejscowosc = miejscowosc;
+        this.ulica = ulica;
+    }
 
     
-
 }

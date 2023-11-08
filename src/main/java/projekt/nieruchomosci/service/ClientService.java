@@ -6,4 +6,6 @@ import projekt.nieruchomosci.entity.Client;
 
 public interface ClientService {
     List<Client> getAllClients();
+    List<Client> getClientById(Integer Id);
+    void addClient(Client client);
 }

@@ -21,4 +21,15 @@ public class ClientServiceImpl implements ClientService {
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
+
+    public List<Client> getClientById(Integer Id) {
+        return List.of(clientRepository.findById(Id).orElseThrow());
+    }
+
+    @Override
+    public void addClient(Client client) {
+        clientRepository.save(client);
+    }
+
+    
 }
