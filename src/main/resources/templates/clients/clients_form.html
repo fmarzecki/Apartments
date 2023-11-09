@@ -24,22 +24,22 @@
         <!-- Adding hidden form field to handle update -->
         <input type="hidden" th:field="*{id}"/>
         
-        <input type="text" th:field="*{imie}" placeholder="Imie"
+        <input type="text" th:field="*{firstName}" placeholder="Imie"
             class="form-control mb-4  mt-4 w-25">
-        <input type="text" th:field="*{nazwisko}" placeholder="Nazwisko"
+        <input type="text" th:field="*{lastName}" placeholder="Nazwisko"
             class="form-control mb-4 w-25">
-        <input type="text" th:field="*{nrDowodu}" placeholder="nrDowodu"
+        <input type="text" th:field="*{idNumber}" placeholder="nrDowodu"
             class="form-control mb-4 w-25">
-        <input type="text" th:field="*{miejscowosc}" placeholder="miejscowosc"
+        <input type="text" th:field="*{city}" placeholder="miejscowosc"
             class="form-control mb-4 w-25">
-        <input type="text" th:field="*{ulica}" placeholder="ulica"
+        <input type="text" th:field="*{street}" placeholder="ulica"
             class="form-control mb-4 w-25">
 
-        <button type="submit" class="btn btn-info col-2"> Save employee </button>
+        <button type="submit" class="btn btn-info col-2"> Zapisz klienta </button>
     </form>
     
     <hr>
-    <a th:href="@{/clients}"> Back to Employees List </a>
+    <a th:href="@{/clients}"> Wroc do listy klientow </a>
 </div>
 	
 </body>
