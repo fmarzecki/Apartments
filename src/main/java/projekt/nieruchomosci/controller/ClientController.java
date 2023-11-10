@@ -45,14 +45,14 @@ public class ClientController {
     public String getAllClients(Model model) {
         List<Client> clients = clientService.getAllClients(); // pobranie danych użytkowników z serwisu
         model.addAttribute("clients", clients); // przekazanie danych do widoku
-        return "clients"; // nazwa pliku szablonu Thymeleaf
+        return "clients/clients"; // nazwa pliku szablonu Thymeleaf
     }
 
     @GetMapping("/{id}")
     public String getClientById(@PathVariable("id") int id, Model model) {
         List<Client> clients = clientService.getClientById(id); // pobranie danych użytkowników z serwisu
         model.addAttribute("clients", clients); // przekazanie danych do widoku
-        return "clients"; // nazwa pliku szablonu Thymeleaf
+        return "clients/clients"; // nazwa pliku szablonu Thymeleaf
     }
 
     /*
