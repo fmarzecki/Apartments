@@ -5,11 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class LoginController {
+public class ErrorHandler {
     
-    @GetMapping("/showMyLoginPage")
-    public String showMyLoginPage() {
 
-        return "security/fancy-login";
+    @GetMapping("/access-denied")
+    public String handleAccessDenied() {
+        return "/security/access-denied";
     }
+
 }
