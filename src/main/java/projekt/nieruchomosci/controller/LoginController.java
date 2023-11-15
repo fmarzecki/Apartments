@@ -12,4 +12,9 @@ public class LoginController {
 
         return "security/fancy-login";
     }
+
+    @GetMapping
+    public String homePage() {
+        return "redirect:/business";
+    }
 }

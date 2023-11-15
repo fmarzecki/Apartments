@@ -9,39 +9,24 @@
 <body>
     
     <div class="container">
+        
         <div class="row">
             <div class="col">
-                <th:block th:replace="navbar.html"></th:block>
+                <th:block th:insert="navbar/navbarBusiness.html"></th:block>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>List of Clients</h2>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>ID Number</th>
-                            <th>City</th>
-                            <th>Street</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="client : ${clients}">
-                            <td th:text="${client.id}"></td>
-                            <td th:text="${client.firstName}"></td>
-                            <td th:text="${client.lastName}"></td>
-                            <td th:text="${client.idNumber}"></td>
-                            <td th:text="${client.city}"></td>
-                            <td th:text="${client.street}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <form action="#" th:action="@{/business}" th:object="${business}" , method="POST">
+                    <!-- Adding hidden form field to handle update -->
+                    <input type="hidden" th:field="*{id}" />
+                    <input type="text" th:field="*{name}" placeholder="Nazwa Firmy" class="form-control mb-4  mt-4 w-25">
+                    <input type="text" th:field="*{address}" placeholder="Adres" class="form-control mb-4 w-25">
+                <button type="submit" class="btn btn-info col-2"> Zapisz Firme </button>
+            </form>
         </div>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -9,27 +9,33 @@
 <body>
     
     <div class="container">
-        
         <div class="row">
             <div class="col">
-                <th:block th:replace="navbar.html"></th:block>
+                <th:block th:insert="navbar/navbarBusiness.html"></th:block>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <form action="#" th:action="@{/clients/save}" th:object="${client}" , method="POST">
-                    <!-- Adding hidden form field to handle update -->
-                    <input type="hidden" th:field="*{id}" />
-                    <input type="text" th:field="*{firstName}" placeholder="Imie" class="form-control mb-4  mt-4 w-25">
-                    <input type="text" th:field="*{lastName}" placeholder="Nazwisko" class="form-control mb-4 w-25">
-                    <input type="text" th:field="*{idNumber}" placeholder="nrDowodu" class="form-control mb-4 w-25">
-                    <input type="text" th:field="*{city}" placeholder="miejscowosc" class="form-control mb-4 w-25">
-                    <input type="text" th:field="*{street}" placeholder="ulica" class="form-control mb-4 w-25">
-                <button type="submit" class="btn btn-info col-2"> Zapisz klienta </button>
-            </form>
+                <h2>Lista Pracowników <span th:text="${business.name}"></span></h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Imie</th>
+                            <th>Nazwisko</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${usersByBusiness}">
+                                <td th:text="${user.firstName}"></td>
+                                <td th:text="${user.lastName}"></td>
+                                <td th:text="${user.email}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
