@@ -67,6 +67,7 @@ public class ClientController {
         return "clients/clients_form";
     }
 
+    
     /*
      * Endpoint do zapisywania nowych klientów
      * po wywolaniu robimy redirect do listy klientow
