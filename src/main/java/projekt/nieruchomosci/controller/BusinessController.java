@@ -88,13 +88,13 @@ public class BusinessController {
         User employee = userService.findByEmail(email);
 
         if (employee == null) {
-            model.addAttribute("emailNotFound", "Uzytkownika o takim emailu nie znaleziono.");
+            model.addAttribute("info", "Uzytkownika o takim emailu nie znaleziono.");
             model.addAttribute("business", business);
             return "business/businessEmployee";
         }
 
         if (employee.getBusiness() != null) {
-            model.addAttribute("emailNotFound", "Uzytkownik jest już pracownikiem");
+            model.addAttribute("info", "Uzytkownik jest już pracownikiem");
             model.addAttribute("business", business);
             return "business/businessEmployee";
         }
@@ -109,7 +109,7 @@ public class BusinessController {
         business.getEmployees().add(employee);
 
         model.addAttribute("business", business);
-        model.addAttribute("emailNotFound", "Uzytkownik dodany");
+        model.addAttribute("info", "Uzytkownik dodany");
         return "business/businessEmployee";
     }
 
