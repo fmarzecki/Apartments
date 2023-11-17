@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -29,9 +30,6 @@ public class User {
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    // @Column(name = "ID_FIRMY")
-    // private Long businessId;
-
     @ManyToOne
     @JoinColumn(name = "ID_FIRMY", referencedColumnName = "ID")
     private Business business;
@@ -41,6 +39,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Apartment> apartments;
 
   
 

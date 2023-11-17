@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Apartment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <th:block th:insert="navbar/navbarEmployee.html"></th:block>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h4>Dodaj nowy apartament</h4>
+            <form th:action="@{../apartment}" th:object="${apartment}" method="post">
+
+                <div class="form-group">
+                    <label for="photo">Zdjecie</label>
+                    <input type="text" class="form-control" th:field="${photo.photo}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Zdjecie 2</label>
+                    <input type="text" class="form-control" th:field="${photo.photo}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Adres</label>
+                    <input type="text" class="form-control" th:field="*{address}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="number_of_rooms">Liczba pokoi</label>
+                    <input type="number" class="form-control" th:field="*{numberOfRooms}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="area">Powierzchnia (m²)</label>
+                    <input type="number" class="form-control" th:field="*{area}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="number_of_bathrooms">Liczba łazieniek</label>
+                    <input type="number" class="form-control" th:field="*{numberOfBathrooms}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="floor">Piętro</label>
+                    <input type="text" class="form-control" th:field="*{floor}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="has_elevator">Czy jest winda?</label>
+                    <select class="form-control" th:field="*{hasElevator}" required>
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rent">Czynsz</label>
+                    <input type="number" class="form-control" th:field="*{rent}" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Dodaj apartament</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
