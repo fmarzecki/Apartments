@@ -74,7 +74,7 @@ public class BusinessController {
     public String showFormEmployee(@RequestParam("businessId") int businessId, Model theModel) {
         Business business = businessService.findById(businessId);
         theModel.addAttribute("business", business);
-        return "business/business_form_employee";
+        return "business/business_employee";
     }
 
     @Transactional
@@ -90,13 +90,13 @@ public class BusinessController {
         if (employee == null) {
             model.addAttribute("info", "Uzytkownika o takim emailu nie znaleziono.");
             model.addAttribute("business", business);
-            return "business/businessEmployee";
+            return "business/business_employee";
         }
 
         if (employee.getBusiness() != null) {
             model.addAttribute("info", "Uzytkownik jest już pracownikiem");
             model.addAttribute("business", business);
-            return "business/businessEmployee";
+            return "business/business_employee";
         }
        
         List<Role> roles = new ArrayList<>();
@@ -110,12 +110,12 @@ public class BusinessController {
 
         model.addAttribute("business", business);
         model.addAttribute("info", "Uzytkownik dodany");
-        return "business/businessEmployee";
+        return "business/business_employee";
     }
 
     @GetMapping("/employeesByBusiness")
     public String getEmployeesByBusiness(@RequestParam("businessId") int id, Model model) {
         model.addAttribute("business", businessService.findById(id));
-        return "business/businessEmployee";
+        return "business/business_employee";
     }
 }

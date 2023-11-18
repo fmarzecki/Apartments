@@ -12,13 +12,11 @@ import projekt.nieruchomosci.service.UserService;
 @Configuration
 public class SecurityConfig {
 
-    //bcrypt bean definition
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    //authenticationProvider bean definition
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserService userService) {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
@@ -46,9 +44,6 @@ public class SecurityConfig {
                 configurer
                         .accessDeniedPage("/access-denied")
         );
-        
-
         return http.build();
     }
-
 }

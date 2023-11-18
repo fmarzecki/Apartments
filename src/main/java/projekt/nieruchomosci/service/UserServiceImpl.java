@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(webUser.getLastName());
 		user.setBusiness(null);
 		
-
 		// give user default role of "client"
 		user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_CLIENT")));
 
