@@ -9,32 +9,23 @@
         <li class="nav-item active">
           <a class="nav-link"  th:href="@{/business/showFormAdd}"> Dodaj Firme <span class="sr-only">(current)</span></a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
+
+        <li class="nav-item dropdown" sec:authorize="hasRole('EMPLOYEE')">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
+            Widok
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a class="dropdown-item" th:href="@{/client}">Klient</a>
+            <a class="dropdown-item" th:href="@{/employee}">Pracownik</a>
+            <a class="dropdown-item"  sec:authorize="hasRole('ADMIN')" th:href="@{/business}">Admin</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li> -->
       </ul>
+
       <p><span sec:authentication="name"></span></p>
       <p th:each="authority : ${#authentication.getAuthorities()}"
-      th:if="${authority.getAuthority().startsWith('ROLE_CLIENT')}"
-      th:text="${authority.getAuthority().replaceFirst('ROLE_CLIENT', ', KLIENT')}">
-      </p>
-      <p th:each="authority : ${#authentication.getAuthorities()}"
-      th:if="${authority.getAuthority().startsWith('ROLE_EMPLOYEE')}"
-      th:text="${authority.getAuthority().replaceFirst('ROLE_EMPLOYEE', ', PRACOWNIK')}">
+      th:if="${authority.getAuthority().startsWith('ROLE_')}"
+      th:text="${authority.getAuthority().replaceFirst('ROLE_', ', ')}">
       </p>
 
       <form th:action="@{/logout}" action="#"  method="POST" class="form-inline my-2 my-lg-0">

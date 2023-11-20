@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col">
+        <h2>Lista usterek:</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Mieszkanie</th>
+                        <th>Opis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="defect : ${defects}">
+                        <td th:text="${defect.apartment.address}"></td>
+                        <td th:text="${defect.description}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

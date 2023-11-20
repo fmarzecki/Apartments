@@ -14,19 +14,21 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <th:block th:insert="navbar/navbarBusiness.html"></th:block>
+                <th:block th:insert="~{navbar/navbarBusiness}"></th:block>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h4 class=""> Lista Pracowników <span th:text="${business.name}"></span> </h4>
+                <h4 class=""> Lista Pracowników <span th:text="${business.name}" th:value="${business.name}"></span> </h4>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Imie</th>
                             <th>Nazwisko</th>
                             <th>Email</th>
+                            <th></th>
+                            <th class="text-right" >Manager</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,15 +36,44 @@
                             <td th:text="${user.firstName}"></td>
                             <td th:text="${user.lastName}"></td>
                             <td th:text="${user.email}"></td>
+                            <td>
+                                <div class="text-right">
+                                    <a th:href="@{/business/deleteEmployee(employeeEmail=${user.email})}"
+                                       style="margin-right: 5px;"
+                                       class="btn btn-primary btn-sm ml-3">
+                                       Usuń
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div th:if="${user.isManager == null}">
+                                    <div class="text-right">
+                                        <a th:href="@{/business/makeEmployeeManager(employeeEmail=${user.email})}"
+                                           style="margin-right: 5px;"
+                                           class="btn btn-primary btn-sm ml-3">
+                                           Oznacz jako Manager
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="text-right" th:unless="${user.isManager == null}">
+                                    Tak
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <form th:action="@{/business/addEmployeeToBusiness}" , method="POST">
+                            <form th:action="@{/business/addEmployeeToBusiness}" method="POST" class="w-100">
                                 <td colspan="2">
-                                    <button type="submit" class="btn btn-info"> Dodaj Pracownika </button>
+                                    <button type="submit" class="btn btn-info">Dodaj Pracownika</button>
                                     <input type="hidden" name="businessId" th:value="${business.id}">
                                 </td>
                                 <td>
                                     <input type="text" name="employeeEmail" placeholder="Email" class="form-control mt-1">
+                                </td>
+                                <td colspan="2" class="text-right">
+                                    <div>
+                                        <label class="mr-2">Manager: </label>
+                                        <input type="radio" name="isManager" value="true">
+                                    </div>
                                 </td>
                             </form>
                         </tr>
@@ -52,7 +83,6 @@
                                 <span th:text="${info}"></span>
                             </div>
                         </div>
-
                     </tbody>
                 </table>
             </div>

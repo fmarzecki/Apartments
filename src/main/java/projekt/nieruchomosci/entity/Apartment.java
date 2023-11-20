@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -62,6 +64,17 @@ public class Apartment {
 
     @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<ApartmentPhoto> photos;
+
+    @OneToOne(mappedBy = "apartment")
+    private Contract contract;
+
+    @OrderBy("creationDate DESC")
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER)
+    private List<Defect> defects;
+    
+    @OrderBy("creationDate DESC")
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER)
+    private List<Mail> mails;
 
     public Apartment(String photo, String address, int numberOfRooms, double area, int numberOfBathrooms, int floor,
             boolean hasElevator, double rent) {

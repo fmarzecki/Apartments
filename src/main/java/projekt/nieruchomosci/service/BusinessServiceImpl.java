@@ -29,7 +29,7 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public Business findById(int id) {
+    public Business findById(Long id) {
         Optional<Business> existingOptional = businessRepository.findById(id);
         if (existingOptional.isPresent()) {
                 return existingOptional.get();

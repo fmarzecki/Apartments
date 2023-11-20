@@ -29,15 +29,23 @@ public class Business {
     @Column(name = "ADDRESS")
     private String address;
 
-    //  OneToMany relationships are lazy by default
-    //  This means that the relationship won't be loaded right away,
-    //  but only when and if actually needed.
+    @Column(name = "ACCOUNT_NUMBER")
+    private String accountNumber;
+
     @OneToMany(mappedBy = "business", fetch = FetchType.EAGER)
     private List<User> employees;
+
+    @OneToMany(mappedBy = "business", fetch = FetchType.EAGER)
+    private List<Apartment> apartments;
 
     public int howManyEmployees() {
         return employees.size();
     }
+
+    public int howManyApartments() {
+        return apartments.size();
+    }
+
 
     public Business(String name, String address) {
         this.name = name;

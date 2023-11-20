@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" th:href="@{/employee/addApartment}">Dodaj Mieszkanie</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <a class="navbar-brand" th:href="@{/client}">Mieszkania</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,28 +7,15 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link"  th:href="@{/employee/apartments}"> Zobacz mieszkania <span class="sr-only">(current)</span></a>
-        </li> 
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Umowy
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" th:href="@{/employee/contract/addContract}">Dodaj umowe</a>
-            <a class="dropdown-item" th:href="@{/employee/contract/contracts}">Zobacz umowy</a>
-          </div>
+          <a class="nav-link"  th:href="@{/client/contracts}"> Zobacz umowy <span class="sr-only">(current)</span></a>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span th:if="${!hasUnreadMails}">Wiadomości</span>
-            <span th:if="${hasUnreadMails}"><strong> Wiadomości</strong></span>
-  
+            Wiadomości
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" th:href="@{/employee/mails}">E-mail</a>
-            <a class="dropdown-item" th:href="@{/employee/defects}">Usterki</a>
+            <a class="dropdown-item" th:href="@{/client/mails}">E-mail</a>
+            <a class="dropdown-item" th:href="@{/client/defects}">Usterki</a>
           </div>
         </li>
 
@@ -44,12 +31,14 @@
         </li>
       </ul>
 
+      
+      
       <p><span sec:authentication="name"></span></p>
       <p th:each="authority : ${#authentication.getAuthorities()}"
       th:if="${authority.getAuthority().startsWith('ROLE_')}"
       th:text="${authority.getAuthority().replaceFirst('ROLE_', ', ')}">
       </p>
-      
+
       <form th:action="@{/logout}" action="#"  method="POST" class="form-inline my-2 my-lg-0">
           <input class="btn btn-danger mb-3 ml-1" type="submit" value="Logout" />
         <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Lista Firm</title>
+    <title>Lista umów</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -12,47 +12,45 @@
 <body>
 
     <div class="container">
+
         <div class="row">
             <div class="col">
-                <th:block th:insert="navbar/navbarBusiness.html"></th:block>
+                <div th:insert="~{navbar/navbarClient :: navbar}"> </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>Lista Firm:</h2>
+                <h2>Lista umów:</h2>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Nazwa</th>
-                                <th>Adres</th>
-                                <th>Liczba Pracowników</th> 
-                                <th>Liczba Mieszkań</th> 
+                                <th>Data Rozpoczęcia</th>
+                                <th>Data Zakończenia</th>
+                                <th>Czynsz</th>
+                                <th>Kaucja</th>
+                                <th>Nr Konta Właściciela</th>
+                                <th>Dzień Płatności</th>
+                                <th>Klient</th>
+                                <th>Mieszkanie</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="business : ${businesses}">
+                            <tr th:each="contract : ${contracts}">
+                                <td th:text="${#dates.format(contract.startDate, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${#dates.format(contract.endDate, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${contract.rent}"></td>
+                                <td th:text="${contract.deposit}"></td>
+                                <td th:text="${contract.ownerAccountNumber}"></td>
+                                <td th:text="${contract.paymentDay}"></td>
+                                <td th:text="${contract.user.email}"></td>
+                                <td th:text="${contract.apartment.address}"></td>
                                 <td>
-                                    <a th:href="@{/business/employeesByBusiness(businessId=${business.id})}"
-                                        th:text="${business.name}">
-                                    </a>
-                                </td>
-                                <td th:text="${business.address}"></td>
-                                <td th:text="${business.howManyEmployees()}"></td>
-                                <td th:text="${business.howManyApartments()}"></td>
-                                <td>
-                                    <div class="d-flex justify-content-end">
-                                        <a th:href="@{/business/showFormUpdate(businessId=${business.id})}"
-                                            style="margin-right: 5px;"
-                                            class="btn btn-primary btn-sm ml-3">
-                                            Aktualizuj
-                                        </a>
-                                        <a th:href="@{/business/delete(businessId=${business.id})}"
-                                            style="margin-right: 5px;"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="if (!(confirm('Are you sure you want to delete this business?'))) return false">
-                                            Usuń
+                                    <div class="d-flex justify-content-end mb-1">
+                                        <a th:href="@{/client/showDefectForm(contractId=${contract.id})}"
+                                            style="margin-right: 5px;" class="btn btn-primary btn-sm ml-3">
+                                            Zgłoś usterke
                                         </a>
                                     </div>
                                 </td>
@@ -63,6 +61,7 @@
             </div>
         </div>
     </div>
+
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

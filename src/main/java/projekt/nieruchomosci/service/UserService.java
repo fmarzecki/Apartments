@@ -10,8 +10,11 @@ import projekt.nieruchomosci.user.WebUser;
 
 public interface UserService extends UserDetailsService {
 
-	public User findByEmail(String userName);
+	User findByEmail(String userName);
 	List<User> findByBusinessId(int id);
+	List<User> findAll();
 	void save(WebUser webUser);
 	void update(User user);
+
+
 }

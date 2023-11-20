@@ -14,18 +14,20 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <th:block th:insert="navbar/navbarEmployee.html"></th:block>
+                <th:block th:insert="~{navbar/navbarEmployee}"></th:block>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <h2>Lista Firm:</h2>
+                <h2>Lista mieszkań:</h2>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Adres</th>
                                 <th>Czynsz</th>
+                                <th>Wynajęte</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,13 +39,17 @@
                                 </td>
                                 <td th:text="${apartment.rent}"></td>
                                 <td>
+                                    <span th:if="${apartment.contract == null}">Nie</span>
+                                    <span th:if="${apartment.contract != null}">Tak</span>
+                                </td>
+                                <td>
                                     <div class="d-flex justify-content-end">
-                                        <a th:href="@{../apartment/showFormUpdate(apartmentId=${apartment.id})}"
+                                        <a th:href="@{/employee/apartment/showFormUpdate(apartmentId=${apartment.id})}"
                                             style="margin-right: 5px;"
                                             class="btn btn-primary btn-sm ml-3">
                                             Aktualizuj
                                         </a>
-                                        <a th:href="@{../apartment/delete(apartmentId=${apartment.id})}"
+                                        <a th:href="@{/employee/apartment/delete(apartmentId=${apartment.id})}"
                                             style="margin-right: 5px;"
                                             class="btn btn-danger btn-sm"
                                             onclick="if (!(confirm('Czy na pewno chcesz usunac to mieszkanie ?'))) return false">
@@ -51,6 +57,7 @@
                                         </a>
                                     </div>
                                 </td>
+              
                             </tr>
                         </tbody>
                     </table>

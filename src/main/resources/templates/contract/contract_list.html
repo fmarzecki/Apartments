@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Lista mieszkań</title>
+    <title>Lista umów</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -15,39 +15,52 @@
         
         <div class="row">
             <div class="col">
-                <th:block th:insert="navbar/navbarEmployee.html"></th:block>
+                <th:block th:insert="~{navbar/navbarEmployee}"></th:block>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>Lista Firm:</h2>
+                <h2>Lista umów:</h2>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Data Rozpoczęcia</th>
                                 <th>Data Zakończenia</th>
                                 <th>Czynsz</th>
                                 <th>Kaucja</th>
                                 <th>Nr Konta Właściciela</th>
                                 <th>Dzień Płatności</th>
-                                <th>ID Mieszkania</th>
-                                <th>ID Klienta</th>
+                                <th>Klient</th>
+                                <th>Mieszkanie</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="contract : ${contracts}">
-                                <td th:text="${contract.id}"></td>
                                 <td th:text="${#dates.format(contract.startDate, 'yyyy-MM-dd')}"></td>
                                 <td th:text="${#dates.format(contract.endDate, 'yyyy-MM-dd')}"></td>
                                 <td th:text="${contract.rent}"></td>
                                 <td th:text="${contract.deposit}"></td>
                                 <td th:text="${contract.ownerAccountNumber}"></td>
                                 <td th:text="${contract.paymentDay}"></td>
-                                <td th:text="${contract.apartmentId}"></td>
-                                <td th:text="${contract.userId}"></td>
+                                <td th:text="${contract.user.email}"></td>
+                                <td th:text="${contract.apartment.address}"></td>
+                                <td>
+                                    <div class="d-flex justify-content-end">
+                                        <a th:href="@{/employee/contract/showFormUpdate(contractId=${contract.id})}"
+                                            style="margin-right: 5px;"
+                                            class="btn btn-primary btn-sm ml-3">
+                                            Aktualizuj
+                                        </a>
+                                        <a th:href="@{/employee/contract/delete(contractId=${contract.id})}"
+                                            style="margin-right: 5px;"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="if (!(confirm('Czy na pewno chcesz usunac te umowe ?'))) return false">
+                                            Usuń
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

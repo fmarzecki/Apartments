@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
 		// save user in the database
 		userRepository.save(user);
+
 	}
 
 	public void update(User user){
@@ -93,5 +94,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByBusinessId(id);
     }
 
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+
+
+	
 	
 }

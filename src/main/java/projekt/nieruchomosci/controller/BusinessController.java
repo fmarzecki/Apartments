@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import jakarta.transaction.Transactional;
-
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import projekt.nieruchomosci.dao.RoleRepository;
@@ -50,8 +47,16 @@ public class BusinessController {
     }
 
     @GetMapping("/delete")
-    public String deleteBusiness(@RequestParam("businessId") int businessId) {
+    public String deleteBusiness(@RequestParam("businessId") Long businessId) {
         Business business = businessService.findById(businessId);
+        // Wraz z usunieciem firmy, musimy
+        List<User> employees = userService.findByBusinessId(businessId.intValue());
+
+        for (User user : employees) {
+            user.getRoles().remove(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
+            user.getRoles().remove(roleRepository.findRoleByName("ROLE_MANAGER"));
+        }
+
         businessService.delete(business);
         return "redirect:/business";
     }
@@ -71,17 +76,17 @@ public class BusinessController {
     }
 
     @GetMapping("/showFormEmployee")
-    public String showFormEmployee(@RequestParam("businessId") int businessId, Model theModel) {
+    public String showFormEmployee(@RequestParam("businessId") Long businessId, Model theModel) {
         Business business = businessService.findById(businessId);
         theModel.addAttribute("business", business);
         return "business/business_employee";
     }
 
-    @Transactional
     @PostMapping("/addEmployeeToBusiness")
     public String addEmployeeToBusiness(
             @RequestParam("employeeEmail") String email,
-            @RequestParam("businessId") int businessId,
+            @RequestParam("businessId") Long businessId,
+            @RequestParam(name = "isManager", defaultValue = "false") Boolean isManager,
             Model model) {
 
         Business business = businessService.findById(businessId);
@@ -103,9 +108,15 @@ public class BusinessController {
         roles.add(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
         roles.add(roleRepository.findRoleByName("ROLE_CLIENT"));
 
+        if (isManager) {
+            roles.add(roleRepository.findRoleByName("ROLE_MANAGER"));
+            employee.setIsManager(true);
+        }
+
         employee.setRoles(roles);
         employee.setBusiness(business);
 
+        userService.update(employee);
         business.getEmployees().add(employee);
 
         model.addAttribute("business", business);
@@ -114,8 +125,41 @@ public class BusinessController {
     }
 
     @GetMapping("/employeesByBusiness")
-    public String getEmployeesByBusiness(@RequestParam("businessId") int id, Model model) {
+    public String getEmployeesByBusiness(@RequestParam("businessId") Long id, Model model) {
         model.addAttribute("business", businessService.findById(id));
         return "business/business_employee";
+    }
+    
+    @GetMapping("/makeEmployeeManager")
+    public String makeEmployeeManager(@RequestParam("employeeEmail") String employeeEmail, Model model) {
+        User employee = userService.findByEmail(employeeEmail);
+
+        if (employee.getIsManager() == null) {
+            employee.getRoles().add(roleRepository.findRoleByName("ROLE_MANAGER"));
+            employee.setIsManager(true);
+            userService.update(employee);
+        }
+      
+
+        model.addAttribute("business", employee.getBusiness());
+        return "business/business_employee";
+    }
+
+    @GetMapping("/deleteEmployee")
+    public String deleteEmployee(@RequestParam("employeeEmail") String employeeEmail, Model model) {
+        User employee = userService.findByEmail(employeeEmail);
+        model.addAttribute("business", employee.getBusiness()); 
+
+        if (employee.getBusiness() != null) {
+            employee.getBusiness().getEmployees().remove(employee);
+            employee.getRoles().remove(roleRepository.findRoleByName("ROLE_MANAGER"));
+            employee.getRoles().remove(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
+            employee.setBusiness(null);
+            employee.setIsManager(null);
+            userService.update(employee);
+            return "business/business_employee";
+        }
+        
+        return "redirect:/";
     }
 }

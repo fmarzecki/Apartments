@@ -15,6 +15,6 @@ public class LoginController {
 
     @GetMapping
     public String homePage() {
-        return "redirect:/business";
+        return "redirect:/client";
     }
 }

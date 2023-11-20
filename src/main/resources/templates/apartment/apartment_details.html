@@ -66,7 +66,7 @@
             
                     <p><strong>Powierzchnia:</strong> <span th:text="${apartment.area}"></span> m2</p>
                     <p><strong>Liczba łazienek:</strong> <span th:text="${apartment.numberOfBathrooms}"></span></p>
-                    <p><strong>Czynsz:</strong> <span th:text="${apartment.rent}"></span> zł</p>
+                    <p><strong>Czynsz:</strong> <span th:text="${apartment.rent}"></span></p>
                     <p><strong>Liczba pokoi:</strong> <span th:text="${apartment.numberOfRooms}"></span></p>
                     <p><strong>Winda:</strong> <span th:text="${apartment.hasElevator ? 'Tak' : 'Nie'}"></span></p>
                     <p><strong>Piętro:</strong> <span th:text="${apartment.floor}"></span></p>
@@ -75,7 +75,7 @@
                     <div id="apartment-photos-carousel" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
                             <div th:each="photo: ${apartment.photos}">
-                                <img th:src="${photo.photo}" class="d-block w-100" alt="Apartment Photo">
+                                <img th:if="${photo.photo != null}" th:src="${photo.photo}" class="d-block w-100" alt="Apartment Photo">
                             </div>
                         </div>
                     </div>

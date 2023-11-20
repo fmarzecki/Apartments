@@ -1,7 +1,9 @@
 package projekt.nieruchomosci.service;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import projekt.nieruchomosci.dao.ApartmentRepository;
@@ -34,6 +36,13 @@ public class ApartmentServiceImpl implements ApartmentService{
         aparmentRepository.delete(apartment);
     }
 
-    
-    
+    @Override
+    public List<Apartment> findAll() {
+        return aparmentRepository.findAll();
+    }
+
+    @Override
+	public List<Apartment> findAll(Sort sort) {
+		return aparmentRepository.findAll(sort);
+	}
 }

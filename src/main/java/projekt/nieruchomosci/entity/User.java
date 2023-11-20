@@ -30,6 +30,9 @@ public class User {
     @Column(name = "LAST_NAME")
     private String lastName;
 
+    @Column(name = "IS_MANAGER")
+    private Boolean isManager;
+
     @ManyToOne
     @JoinColumn(name = "ID_FIRMY", referencedColumnName = "ID")
     private Business business;
@@ -40,10 +43,20 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Apartment> apartments;
 
-  
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Contract> contracts;
+    
+    @OrderBy("creationDate DESC")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Defect> defects;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OrderBy("creationDate DESC")
+    private List<Mail> mails;
+    
 
     public User(String email, String password, boolean enabled) {
         this.email = email;
