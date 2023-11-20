@@ -7,20 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import projekt.nieruchomosci.entity.Apartment;
 import projekt.nieruchomosci.service.ApartmentService;
-import projekt.nieruchomosci.service.UserService;
 
 @Controller
 @RequestMapping("/apartment")
 public class ApartmentController {
     
     private final ApartmentService apartmentService;
-    private final UserService userService;
 
-    public ApartmentController(ApartmentService apartmentService, UserService userService) {
+    public ApartmentController(ApartmentService apartmentService) {
         this.apartmentService = apartmentService;
-        this.userService = userService;
     }
-
 
     @GetMapping("/{id}")
     public String showApartmentDetails(@PathVariable int id, Model model) {

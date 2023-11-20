@@ -3,14 +3,14 @@ package projekt.nieruchomosci.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import projekt.nieruchomosci.dao.RoleRepository;
 import projekt.nieruchomosci.entity.Business;
@@ -20,66 +20,27 @@ import projekt.nieruchomosci.service.BusinessService;
 import projekt.nieruchomosci.service.UserService;
 
 @Controller
-@RequestMapping("/business")
-public class BusinessController {
-    private final BusinessService businessService;
+@RequestMapping("/manager")
+public class ManagerController {
+    
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final BusinessService businessService;
 
-    @Autowired
-    public BusinessController(BusinessService businessService, UserService userService, RoleRepository roleRepository) {
-        this.businessService = businessService;
+
+    public ManagerController(UserService userService, RoleRepository roleRepository, BusinessService businessService) {
         this.userService = userService;
         this.roleRepository = roleRepository;
-    }
-
-    @PostMapping
-    public String addBusiness(@ModelAttribute("business") Business business) {
-        businessService.add(business);
-        return "redirect:/business";
+        this.businessService = businessService;
     }
 
     @GetMapping
-    public String getBusinesses(Model theModel) {
-        List<Business> businesses = businessService.getAll();
-        theModel.addAttribute("businesses", businesses);
-        return "business/businesses";
-    }
+    public String getBusinessInfo(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
 
-    @GetMapping("/delete")
-    public String deleteBusiness(@RequestParam("businessId") Long businessId) {
-        Business business = businessService.findById(businessId);
-        // Wraz z usunieciem firmy, musimy
-        List<User> employees = userService.findByBusinessId(businessId.intValue());
-
-        for (User user : employees) {
-            user.getRoles().remove(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
-            user.getRoles().remove(roleRepository.findRoleByName("ROLE_MANAGER"));
-        }
-
-        businessService.delete(business);
-        return "redirect:/business";
-    }
-
-    @GetMapping("/showFormAdd")
-    public String showForm(Model theModel) {
-        Business business = new Business();
-        theModel.addAttribute("business", business);
-        return "business/business_form";
-    }
-
-    @GetMapping("/showFormUpdate")
-    public String showFormUpdate(@RequestParam("businessId") Long businessId, Model theModel) {
-        Business business = businessService.findById(businessId);
-        theModel.addAttribute("business", business);
-        return "business/business_form";
-    }
-
-    @GetMapping("/showFormEmployee")
-    public String showFormEmployee(@RequestParam("businessId") Long businessId, Model theModel) {
-        Business business = businessService.findById(businessId);
-        theModel.addAttribute("business", business);
-        return "business/business_employee";
+        model.addAttribute("business", user.getBusiness());
+        return "manager/manager_business";
     }
 
     @PostMapping("/addEmployeeToBusiness")
@@ -95,13 +56,13 @@ public class BusinessController {
         if (employee == null) {
             model.addAttribute("info", "Uzytkownika o takim emailu nie znaleziono.");
             model.addAttribute("business", business);
-            return "business/business_employee";
+            return "manager/business_employee";
         }
 
         if (employee.getBusiness() != null) {
             model.addAttribute("info", "Uzytkownik jest już pracownikiem");
             model.addAttribute("business", business);
-            return "business/business_employee";
+            return "manager/business_employee";
         }
        
         List<Role> roles = new ArrayList<>();
@@ -113,7 +74,7 @@ public class BusinessController {
             employee.setIsManager(true);
         }
 
-        employee.setRoles(roles);
+        employee.getRoles().add(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
         employee.setBusiness(business);
 
         userService.update(employee);
@@ -121,15 +82,15 @@ public class BusinessController {
 
         model.addAttribute("business", business);
         model.addAttribute("info", "Uzytkownik dodany");
-        return "business/business_employee";
+        return "manager/business_employee";
     }
 
     @GetMapping("/employeesByBusiness")
     public String getEmployeesByBusiness(@RequestParam("businessId") Long id, Model model) {
         model.addAttribute("business", businessService.findById(id));
-        return "business/business_employee";
+        return "manager/business_employee";
     }
-    
+
     @GetMapping("/makeEmployeeManager")
     public String makeEmployeeManager(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);
@@ -140,9 +101,8 @@ public class BusinessController {
             userService.update(employee);
         }
       
-
         model.addAttribute("business", employee.getBusiness());
-        return "business/business_employee";
+        return "manager/business_employee";
     }
 
     @GetMapping("/deleteEmployee")
@@ -157,7 +117,7 @@ public class BusinessController {
             employee.setBusiness(null);
             employee.setIsManager(null);
             userService.update(employee);
-            return "business/business_employee";
+            return "manager/business_employee";
         }
         
         return "redirect:/";

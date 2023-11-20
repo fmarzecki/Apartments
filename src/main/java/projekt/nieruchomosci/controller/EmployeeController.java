@@ -19,13 +19,11 @@ import jakarta.servlet.http.HttpSession;
 import projekt.nieruchomosci.dao.ContractRepository;
 import projekt.nieruchomosci.dao.MailRepository;
 import projekt.nieruchomosci.entity.Apartment;
-import projekt.nieruchomosci.entity.Business;
 import projekt.nieruchomosci.entity.Contract;
 import projekt.nieruchomosci.entity.Defect;
 import projekt.nieruchomosci.entity.Mail;
 import projekt.nieruchomosci.entity.User;
 import projekt.nieruchomosci.service.ApartmentService;
-import projekt.nieruchomosci.service.BusinessService;
 import projekt.nieruchomosci.service.UserService;
 
 @Controller
@@ -34,15 +32,13 @@ public class EmployeeController {
 
     private final ApartmentService apartmentService;
     private final UserService userService;
-    private final BusinessService businessService;
     private final ContractRepository contractRepository;
     private final MailRepository mailRepository;
 
     public EmployeeController(ApartmentService apartmentService, UserService userService,
-            BusinessService businessService, ContractRepository contractRepository, MailRepository mailRepository) {
+             ContractRepository contractRepository, MailRepository mailRepository) {
         this.apartmentService = apartmentService;
         this.userService = userService;
-        this.businessService = businessService;
         this.contractRepository = contractRepository;
         this.mailRepository = mailRepository;
     }
