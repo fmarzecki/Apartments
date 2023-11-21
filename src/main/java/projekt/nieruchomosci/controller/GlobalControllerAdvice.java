@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import projekt.nieruchomosci.entity.Apartment;
+import projekt.nieruchomosci.entity.Defect;
 import projekt.nieruchomosci.entity.Mail;
 import projekt.nieruchomosci.entity.User;
 import projekt.nieruchomosci.service.UserService;
@@ -29,7 +30,6 @@ public class GlobalControllerAdvice {
             return false;
         }
         List<Apartment> apartments = user.getApartments();
-        
         for (Apartment apartment : apartments) {
             for (Mail mail : apartment.getMails()) {
                 if (!mail.getIsRead()) {
@@ -37,7 +37,40 @@ public class GlobalControllerAdvice {
                 }
             }
         }
-
         return false;
     }
+
+    @ModelAttribute("hasUnreadDefects")
+    public boolean hasUnreadDefects() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+        if (user == null) {
+            return false;
+        }
+
+        List<Apartment> apartments = user.getApartments();
+        for (Apartment apartment : apartments) {
+            for (Defect defect : apartment.getDefects()) {
+                if (!defect.getIsRead()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @ModelAttribute("businessLogo")
+    public String getLogo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+        if (user == null) {
+            return null;
+        }
+
+        if (user.getBusiness() != null ) {
+            return user.getBusiness().getLogo();
+        }
+        return null;
+    }
+
 }

@@ -23,6 +23,9 @@ public class Defect {
 
     @Column(name = "creation_date", insertable = false, updatable = false)
     private Date creationDate;
+
+    @Column(name = "is_read")
+    private Boolean isRead;
     
     @ManyToOne
     @JoinColumn(name = "client_id", referencedColumnName = "ID")

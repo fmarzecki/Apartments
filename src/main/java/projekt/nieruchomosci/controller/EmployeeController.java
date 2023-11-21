@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 import projekt.nieruchomosci.dao.ContractRepository;
+import projekt.nieruchomosci.dao.DefectRepository;
 import projekt.nieruchomosci.dao.MailRepository;
 import projekt.nieruchomosci.entity.Apartment;
 import projekt.nieruchomosci.entity.Contract;
@@ -34,13 +35,16 @@ public class EmployeeController {
     private final UserService userService;
     private final ContractRepository contractRepository;
     private final MailRepository mailRepository;
+    private final DefectRepository defectRepository;
+    
 
     public EmployeeController(ApartmentService apartmentService, UserService userService,
-             ContractRepository contractRepository, MailRepository mailRepository) {
+            ContractRepository contractRepository, MailRepository mailRepository, DefectRepository defectRepository) {
         this.apartmentService = apartmentService;
         this.userService = userService;
         this.contractRepository = contractRepository;
         this.mailRepository = mailRepository;
+        this.defectRepository = defectRepository;
     }
 
     @GetMapping
@@ -96,8 +100,9 @@ public class EmployeeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
         User user = userService.findByEmail(currentUser);
-        model.addAttribute("apartments", user.getApartments());
 
+        model.addAttribute("business", user.getBusiness());
+        model.addAttribute("apartments", user.getApartments());
         return "employee/employee_all_apartments";
     } 
 
@@ -243,6 +248,10 @@ public class EmployeeController {
         for (Apartment apartment : apartments) {
             for (Defect defect : apartment.getDefects()) {
                  defects.add(defect);
+                   if (!defect.getIsRead()) {
+                    defect.setIsRead(true);
+                    defectRepository.save(defect);
+                 }
             }
         }
 

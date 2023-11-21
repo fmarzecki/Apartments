@@ -116,6 +116,7 @@ public class ClientController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(authentication.getName());
 
+        defect.setIsRead(false);
         defect.setUser(user);
         defectRepository.save(defect);
         return "redirect:/client/defects";

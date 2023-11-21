@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,10 @@ public class Business {
     @Column(name = "ACCOUNT_NUMBER")
     private String accountNumber;
 
+    @Column(name = "LOGO")
+    private String logo;
+
+    @OrderBy("isManager ASC")
     @OneToMany(mappedBy = "business", fetch = FetchType.EAGER)
     private List<User> employees;
 

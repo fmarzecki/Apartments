@@ -43,20 +43,27 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    // Apartamenty pracownika
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Apartment> apartments;
 
+    // Kontrakty klienta
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Contract> contracts;
-    
+
+    // Usterki klienta
     @OrderBy("creationDate DESC")
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Defect> defects;
 
+    // Maile klienta
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @OrderBy("creationDate DESC")
     private List<Mail> mails;
     
+    @OrderBy("reportDate DESC")
+    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
+    private List<Report> reports;
 
     public User(String email, String password, boolean enabled) {
         this.email = email;
@@ -68,6 +75,16 @@ public class User {
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public int howManyContracts() {
+        int contracts = 0;
+        for (Apartment apartment : apartments) {
+            if (apartment.getContract() != null) {
+                contracts +=1;
+            }
+        }
+        return contracts;
     }
 
     @Override

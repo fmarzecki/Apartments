@@ -1,5 +1,6 @@
 package projekt.nieruchomosci.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import projekt.nieruchomosci.dao.RoleRepository;
@@ -34,10 +48,47 @@ public class BusinessController {
     }
 
     @PostMapping
-    public String addBusiness(@ModelAttribute("business") Business business) {
-        businessService.add(business);
+    public String addBusiness(@ModelAttribute("business") Business business, @RequestParam("photo") MultipartFile file) {
+        OkHttpClient client = new OkHttpClient();
+        String apiKey = "590b6dca1f950b224ae9d8d8afb6e8e8";
+        String url = "https://api.imgbb.com/1/upload";
+        
+        try {
+            RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("key", apiKey)
+                .addFormDataPart("image", file.getName(),
+                    RequestBody.create(file.getBytes(), MediaType.parse("application/octet-stream")))
+                .build();
+    
+            Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+    
+            Call call = client.newCall(request);
+            Response response = call.execute();
+    
+            if (response.isSuccessful()) {
+                String responseData = response.body().string();
+                ObjectMapper mapper = new ObjectMapper();
+                JSONPObject result = mapper.readValue(responseData, JSONPObject.class);
+                
+
+                System.out.println(result.getValue().toString());
+                // business.setLogo(responseData);
+                // businessService.add(business);
+
+            } else {
+                System.out.println("Błąd podczas przesyłania pliku do ImgBB. Kod błędu: " + response.code());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "redirect:/business";
     }
+    
 
     @GetMapping
     public String getBusinesses(Model theModel) {

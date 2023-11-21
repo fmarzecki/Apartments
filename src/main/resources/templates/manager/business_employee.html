@@ -27,6 +27,7 @@
                             <th>Imie</th>
                             <th>Nazwisko</th>
                             <th>Email</th>
+                            <th>Podpisane umowy</th>
                             <th></th>
                             <th class="text-right" >Manager</th>
                         </tr>
@@ -36,6 +37,7 @@
                             <td th:text="${user.firstName}"></td>
                             <td th:text="${user.lastName}"></td>
                             <td th:text="${user.email}"></td>
+                            <td th:text="${user.howManyContracts()}"></td>
                             <td>
                                 <div class="text-right">
                                     <a th:href="@{/manager/deleteEmployee(employeeEmail=${user.email})}"
@@ -69,7 +71,7 @@
                                 <td>
                                     <input type="text" name="employeeEmail" placeholder="Email" class="form-control mt-1">
                                 </td>
-                                <td colspan="2" class="text-right">
+                                <td colspan="3" class="text-right">
                                     <div>
                                         <label class="mr-2">Manager: </label>
                                         <input type="radio" name="isManager" value="true">

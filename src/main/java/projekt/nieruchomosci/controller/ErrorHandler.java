@@ -9,9 +9,6 @@ public class ErrorHandler {
     
     @GetMapping("/access-denied")
     public String handleAccessDenied() {
-        return "/security/access-denied";
+        return "/error";
     }
-
-    
-
 }

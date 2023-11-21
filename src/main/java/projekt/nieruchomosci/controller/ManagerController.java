@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import projekt.nieruchomosci.dao.ReportController;
 import projekt.nieruchomosci.dao.RoleRepository;
+import projekt.nieruchomosci.entity.Apartment;
 import projekt.nieruchomosci.entity.Business;
+import projekt.nieruchomosci.entity.Report;
 import projekt.nieruchomosci.entity.Role;
 import projekt.nieruchomosci.entity.User;
 import projekt.nieruchomosci.service.BusinessService;
@@ -26,12 +29,14 @@ public class ManagerController {
     private final UserService userService;
     private final RoleRepository roleRepository;
     private final BusinessService businessService;
+    private final ReportController reportController;
 
-
-    public ManagerController(UserService userService, RoleRepository roleRepository, BusinessService businessService) {
+    public ManagerController(UserService userService, RoleRepository roleRepository, BusinessService businessService,
+            ReportController reportController) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.businessService = businessService;
+        this.reportController = reportController;
     }
 
     @GetMapping
@@ -119,7 +124,50 @@ public class ManagerController {
             userService.update(employee);
             return "manager/business_employee";
         }
-        
-        return "redirect:/";
+        return "redirect:/manager";
+    }
+
+    @GetMapping("/generateRaport")
+    public String generateRaport(@RequestParam("businessId") Long businessId, Model model) {
+        Business business = businessService.findById(businessId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+
+        int numberOfContracts = 0;
+        int earnings = 0;
+        int expenses = business.getEmployees().size() * 3500;
+        List<Apartment> businessApartments = business.getApartments();
+        for (Apartment apartment : businessApartments) {
+            if (apartment.getContract() != null) {
+                numberOfContracts += 1;
+                earnings += apartment.getRent();
+            }
+        }
+
+
+
+        Report report = new Report();
+        report.setBusiness(business);
+        report.setManager(user);
+        report.setNumberOfApartments(business.howManyApartments());
+        report.setNumberOfEmployees(business.howManyEmployees());
+        report.setNumberOfContracts(numberOfContracts);
+        report.setEarnings(earnings);
+        report.setExpenses(expenses);
+        user.getReports().add(report);
+        reportController.save(report);
+
+        return "redirect:/manager/showRaports";
+    }
+
+
+    @GetMapping("/showRaports")
+    public String showRaports(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+
+        model.addAttribute("reports", user.getReports()); 
+        model.addAttribute("business", user.getBusiness()); 
+        return "manager/manager_reports";
     }
 }
