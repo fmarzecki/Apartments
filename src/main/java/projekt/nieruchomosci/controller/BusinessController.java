@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -48,47 +47,55 @@ public class BusinessController {
     }
 
     @PostMapping
-    public String addBusiness(@ModelAttribute("business") Business business, @RequestParam("photo") MultipartFile file) {
+    public String addBusiness(@ModelAttribute("business") Business business,
+            @RequestParam("photo") MultipartFile file) {
         OkHttpClient client = new OkHttpClient();
         String apiKey = "590b6dca1f950b224ae9d8d8afb6e8e8";
         String url = "https://api.imgbb.com/1/upload";
-        
-        try {
-            RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("key", apiKey)
-                .addFormDataPart("image", file.getName(),
-                    RequestBody.create(file.getBytes(), MediaType.parse("application/octet-stream")))
-                .build();
-    
-            Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-    
-            Call call = client.newCall(request);
-            Response response = call.execute();
-    
-            if (response.isSuccessful()) {
-                String responseData = response.body().string();
-                ObjectMapper mapper = new ObjectMapper();
-                JSONPObject result = mapper.readValue(responseData, JSONPObject.class);
-                
 
-                System.out.println(result.getValue().toString());
-                // business.setLogo(responseData);
-                // businessService.add(business);
+        // Przy aktualizacji, jeśli File jest pusty ale logo juz istnieje nie chcemy go zmieniac
+        if (file.isEmpty() && businessService.findById(business.getId()).getLogo() != null) {
+            business.setLogo(businessService.findById(business.getId()).getLogo());
+            System.out.println(business.getLogo());
+        } else {
+            try {
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("key", apiKey)
+                        .addFormDataPart("image", file.getName(),
+                                RequestBody.create(file.getBytes(), MediaType.parse("application/octet-stream")))
+                        .build();
 
-            } else {
-                System.out.println("Błąd podczas przesyłania pliku do ImgBB. Kod błędu: " + response.code());
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+
+                Call call = client.newCall(request);
+                Response response = call.execute();
+
+                if (response.isSuccessful()) {
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    String responseData = response.body().string();
+                    JsonNode jsonNode = mapper.readTree(responseData);
+                    String imgUrl = jsonNode.get("data").get("url").asText();
+
+                    business.setLogo(imgUrl);
+
+                } else {
+                    System.out.println("Błąd podczas przesyłania pliku do ImgBB. Kod błędu: " + response.code());
+                }
+
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        businessService.add(business);
         return "redirect:/business";
     }
-    
 
     @GetMapping
     public String getBusinesses(Model theModel) {
@@ -154,7 +161,7 @@ public class BusinessController {
             model.addAttribute("business", business);
             return "business/business_employee";
         }
-       
+
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
         roles.add(roleRepository.findRoleByName("ROLE_CLIENT"));
@@ -180,7 +187,7 @@ public class BusinessController {
         model.addAttribute("business", businessService.findById(id));
         return "business/business_employee";
     }
-    
+
     @GetMapping("/makeEmployeeManager")
     public String makeEmployeeManager(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);
@@ -190,7 +197,6 @@ public class BusinessController {
             employee.setIsManager(true);
             userService.update(employee);
         }
-      
 
         model.addAttribute("business", employee.getBusiness());
         return "business/business_employee";
@@ -199,7 +205,7 @@ public class BusinessController {
     @GetMapping("/deleteEmployee")
     public String deleteEmployee(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);
-        model.addAttribute("business", employee.getBusiness()); 
+        model.addAttribute("business", employee.getBusiness());
 
         if (employee.getBusiness() != null) {
             employee.getBusiness().getEmployees().remove(employee);
@@ -210,7 +216,6 @@ public class BusinessController {
             userService.update(employee);
             return "business/business_employee";
         }
-        
         return "redirect:/";
     }
 }
