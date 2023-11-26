@@ -62,7 +62,7 @@ public class Apartment {
     @JoinColumn(name = "business_id", referencedColumnName = "ID")
     private Business business;
 
-    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ApartmentPhoto> photos;
 
     @OneToOne(mappedBy = "apartment")

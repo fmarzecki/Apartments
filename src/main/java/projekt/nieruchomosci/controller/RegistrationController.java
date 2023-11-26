@@ -34,14 +34,15 @@ public class RegistrationController {
 		this.userService = userService;
 	}
 
+	// Chcemy dostac dane rejestracji bez bialych znakow
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		
 		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}	
 	
+	// Wyswietl formularz rejestracji
 	@GetMapping("/showRegistrationForm")
 	public String showMyLoginPage(Model theModel) {
 		
@@ -50,6 +51,7 @@ public class RegistrationController {
 		return "register/registration-form";
 	}
 
+	// Przetwarzanie rejestracji
 	@PostMapping("/processRegistrationForm")
 	public String processRegistrationForm(
 			@Valid @ModelAttribute("webUser") WebUser theWebUser,

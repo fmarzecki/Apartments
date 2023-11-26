@@ -18,6 +18,7 @@ public class ApartmentController {
         this.apartmentService = apartmentService;
     }
 
+    // Wyświetlenie apartamentu oraz jego szczegółów na podstawie id
     @GetMapping("/{id}")
     public String showApartmentDetails(@PathVariable int id, Model model) {
         Apartment apartment = apartmentService.findById(id);

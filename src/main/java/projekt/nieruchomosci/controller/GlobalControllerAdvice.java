@@ -22,6 +22,7 @@ public class GlobalControllerAdvice {
         this.userService = userService;
     }
 
+    // Wyslij informacje o tym czy pracownik ma nieodczytane maile
     @ModelAttribute("hasUnreadMails")
     public boolean hasUnreadMails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -40,6 +41,7 @@ public class GlobalControllerAdvice {
         return false;
     }
 
+    // Wyslij informacje o tym czy pracownik ma nieodczytane usterki
     @ModelAttribute("hasUnreadDefects")
     public boolean hasUnreadDefects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,6 +61,7 @@ public class GlobalControllerAdvice {
         return false;
     }
 
+    // Zaladuj logo firmy jesli takowe istnieje
     @ModelAttribute("businessLogo")
     public String getLogo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

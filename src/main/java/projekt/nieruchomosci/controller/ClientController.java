@@ -46,6 +46,7 @@ public class ClientController {
         this.userService = userService;
     }
 
+    // Wyswietl dostepne apartamenty do wynajecia
     @GetMapping
     public String getApartments(Model model, @RequestParam(name = "sortBy", required = false) String sortBy) {
         // Pobierz apartamenty które nie są wynajęte
@@ -75,6 +76,7 @@ public class ClientController {
         return "client/client_all_apartments";
     }
 
+    // Wysweitl umowy użytownika
     @GetMapping("/contracts")
     public String getContracts(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,6 +86,7 @@ public class ClientController {
         return "client/client_contract_list";
     }
 
+    // Wyswietl formularz do wyslania usterki
     @GetMapping("/showDefectForm")
     public String showDefectForm(@RequestParam("contractId") Long contractId, Model model) {
         // TODO sprawdzic czy usterki pochodza od uzytkownika posiadajacego mieszkanie
@@ -100,6 +103,7 @@ public class ClientController {
         return "client/client_defect_form";
     }
 
+    // Wyswietl formularz do wyslania maila
     @GetMapping("/showMailForm")
     public String showMailForm(@RequestParam("apartmentId") int apartmentId, Model model) {
         Apartment apartment = apartmentService.findById(apartmentId);
@@ -111,6 +115,7 @@ public class ClientController {
         return "client/client_mail_form";
     }
 
+    // Dodaj usterke
     @PostMapping("/addDefect")
     public String addDefect(@ModelAttribute Defect defect) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -122,6 +127,7 @@ public class ClientController {
         return "redirect:/client/defects";
     }
 
+    // Dodaj maila
     @PostMapping("/addMail")
     public String addMail(@ModelAttribute Mail mail) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -133,6 +139,7 @@ public class ClientController {
         return "redirect:/client/mails";
     }
 
+    // Wyswietl maile uzytkownia
     @GetMapping("/mails")
     public String getMails(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -142,6 +149,7 @@ public class ClientController {
         return "client/mail_list";
     }
 
+    // Wyswietl usterki uzytkownika
     @GetMapping("/defects")
     public String getDefects(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

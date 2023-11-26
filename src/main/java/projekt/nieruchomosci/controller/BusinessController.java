@@ -46,6 +46,7 @@ public class BusinessController {
         this.roleRepository = roleRepository;
     }
 
+    // Dodawanie nowego/aktualizacja firmy
     @PostMapping
     public String addBusiness(@ModelAttribute("business") Business business,
             @RequestParam("photo") MultipartFile file) {
@@ -97,6 +98,7 @@ public class BusinessController {
         return "redirect:/business";
     }
 
+    // Wyswietlenie listy firm
     @GetMapping
     public String getBusinesses(Model theModel) {
         List<Business> businesses = businessService.getAll();
@@ -104,6 +106,7 @@ public class BusinessController {
         return "business/businesses";
     }
 
+    // Usuniecie firmy na podstawie jej id
     @GetMapping("/delete")
     public String deleteBusiness(@RequestParam("businessId") Long businessId) {
         Business business = businessService.findById(businessId);
@@ -119,6 +122,7 @@ public class BusinessController {
         return "redirect:/business";
     }
 
+    // Wyswietla formularz do dodania firmy
     @GetMapping("/showFormAdd")
     public String showForm(Model theModel) {
         Business business = new Business();
@@ -126,6 +130,7 @@ public class BusinessController {
         return "business/business_form";
     }
 
+    // Wyświetla formularz do aktualizacji firmy
     @GetMapping("/showFormUpdate")
     public String showFormUpdate(@RequestParam("businessId") Long businessId, Model theModel) {
         Business business = businessService.findById(businessId);
@@ -133,13 +138,8 @@ public class BusinessController {
         return "business/business_form";
     }
 
-    @GetMapping("/showFormEmployee")
-    public String showFormEmployee(@RequestParam("businessId") Long businessId, Model theModel) {
-        Business business = businessService.findById(businessId);
-        theModel.addAttribute("business", business);
-        return "business/business_employee";
-    }
 
+    // Dodaje pracowniak do danej firmy
     @PostMapping("/addEmployeeToBusiness")
     public String addEmployeeToBusiness(
             @RequestParam("employeeEmail") String email,
@@ -182,12 +182,14 @@ public class BusinessController {
         return "business/business_employee";
     }
 
+    // Wyswietla pracownikow danej firmy
     @GetMapping("/employeesByBusiness")
     public String getEmployeesByBusiness(@RequestParam("businessId") Long id, Model model) {
         model.addAttribute("business", businessService.findById(id));
         return "business/business_employee";
     }
 
+    // Nadaje role MANGER pracownikowi
     @GetMapping("/makeEmployeeManager")
     public String makeEmployeeManager(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);
@@ -202,6 +204,7 @@ public class BusinessController {
         return "business/business_employee";
     }
 
+    // Usuwa pracownika
     @GetMapping("/deleteEmployee")
     public String deleteEmployee(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);

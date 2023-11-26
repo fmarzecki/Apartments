@@ -98,9 +98,4 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
-
-
-	
-	
 }

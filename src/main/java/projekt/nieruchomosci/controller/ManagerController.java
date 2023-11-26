@@ -39,6 +39,7 @@ public class ManagerController {
         this.reportController = reportController;
     }
 
+    // Wyswietl informacje na temat firmy managera
     @GetMapping
     public String getBusinessInfo(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -48,6 +49,7 @@ public class ManagerController {
         return "manager/manager_business";
     }
 
+    // Dodaj pracownika do firmy
     @PostMapping("/addEmployeeToBusiness")
     public String addEmployeeToBusiness(
             @RequestParam("employeeEmail") String email,
@@ -90,12 +92,14 @@ public class ManagerController {
         return "manager/business_employee";
     }
 
+    // Wyswietl pracownikow firmy
     @GetMapping("/employeesByBusiness")
     public String getEmployeesByBusiness(@RequestParam("businessId") Long id, Model model) {
         model.addAttribute("business", businessService.findById(id));
         return "manager/business_employee";
     }
 
+    // Nadaj role MANAGER pracownikowi firmy
     @GetMapping("/makeEmployeeManager")
     public String makeEmployeeManager(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);
@@ -110,6 +114,7 @@ public class ManagerController {
         return "manager/business_employee";
     }
 
+    // Usun pracownika
     @GetMapping("/deleteEmployee")
     public String deleteEmployee(@RequestParam("employeeEmail") String employeeEmail, Model model) {
         User employee = userService.findByEmail(employeeEmail);
@@ -127,6 +132,7 @@ public class ManagerController {
         return "redirect:/manager";
     }
 
+    // Generuj raport dotyczacy firmy
     @GetMapping("/generateRaport")
     public String generateRaport(@RequestParam("businessId") Long businessId, Model model) {
         Business business = businessService.findById(businessId);
@@ -144,8 +150,6 @@ public class ManagerController {
             }
         }
 
-
-
         Report report = new Report();
         report.setBusiness(business);
         report.setManager(user);
@@ -160,7 +164,7 @@ public class ManagerController {
         return "redirect:/manager/showRaports";
     }
 
-
+    // Wyswietl raporty
     @GetMapping("/showRaports")
     public String showRaports(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

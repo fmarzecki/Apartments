@@ -20,16 +20,15 @@
 
         <div class="mt-4">
             <h4>Dodaj nowy apartament</h4>
-            <form th:action="@{/employee/addApartment}" th:object="${apartment}" method="post">
+            <form th:action="@{/employee/addApartment}" th:object="${apartment}" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}" >
                 <div class="form-group">
-                    <label for="photo">Zdjecie</label>
-                    <input type="text" class="form-control" th:field="*{photos[0].photo}">
+                    <label for="photo">Zdjecie 1</label>
+                    <input type="file" id="photo" name="photo" accept="image/*">
                 </div>
-
                 <div class="form-group">
-                    <label for="photo">Zdjecie 2</label>
-                    <input type="text" class="form-control" th:field="*{photos[1].photo}">
+                    <label for="photo2">Zdjecie 2</label>
+                    <input type="file" id="photo2" name="photo2" accept="image/*">
                 </div>
 
                 <div class="form-group">

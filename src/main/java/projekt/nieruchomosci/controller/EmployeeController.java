@@ -32,6 +32,7 @@ import projekt.nieruchomosci.dao.ContractRepository;
 import projekt.nieruchomosci.dao.DefectRepository;
 import projekt.nieruchomosci.dao.MailRepository;
 import projekt.nieruchomosci.entity.Apartment;
+import projekt.nieruchomosci.entity.ApartmentPhoto;
 import projekt.nieruchomosci.entity.Contract;
 import projekt.nieruchomosci.entity.Defect;
 import projekt.nieruchomosci.entity.Mail;
@@ -74,112 +75,150 @@ public class EmployeeController {
         return "apartment/apartment_form"; 
     }
 
-    // // Dodawanie apartamentu
-    // @PostMapping("/addApartment")
-    // public String addApartment(@ModelAttribute("apartment") Apartment apartment) {
-    //     // Pobierz aktualnie zalogowanego użytkownika
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     User user = userService.findByEmail(authentication.getName());
+    // Dodawanie apartamentu
+    @PostMapping("/addApartment")
+    public String addApartment(@ModelAttribute("apartment") Apartment apartment,
+     @RequestParam(value = "photo") MultipartFile file, 
+     @RequestParam(value = "photo2") MultipartFile file2) {
+        // Pobierz aktualnie zalogowanego użytkownika
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+        Apartment currentApartment = apartmentService.findById(apartment.getId());
+        OkHttpClient client = new OkHttpClient();
+        String apiKey = "590b6dca1f950b224ae9d8d8afb6e8e8";
+        String url = "https://api.imgbb.com/1/upload";      
+        ArrayList<ApartmentPhoto> photos = new ArrayList<>();
 
-    // if (file.isEmpty() && businessService.findById(business.getId()).getLogo() != null) {
+        // Jesli zdjecia istaniały i nie chcemy dodać nowego
+        if (file.isEmpty() && file2.isEmpty() && apartmentService.findById(currentApartment.getId()).getPhotos() != null) {
+            apartment.setPhotos(currentApartment.getPhotos());
 
-    //     apartment.setUser(user);
-    //     apartment.setBusiness(user.getBusiness());
+            apartment.setPhotos(photos);
+            apartment.setUser(user);
+            apartment.setBusiness(user.getBusiness());
+            apartmentService.save(apartment);
+            return "redirect:/employee";
+        }
 
-    //     if (apartment.getId() != 0) {
-    //         // Aktualizacja istniejacego mieszkania
-    //         Apartment apartment2 = apartmentService.findById(apartment.getId());
+        // Jeśli jedno zdjecie istniało i nie chcemy dodać nowego
+        if (file.isEmpty() && currentApartment != null && apartmentService.findById(currentApartment.getId()).getPhotos().get(0) != null) {
+            photos.add(currentApartment.getPhotos().get(0));
+        } else {
+            // zdjecie istnialo i chcemy zaktulizoawc
+            // zdjecie nie istnialo i chcemy je dodac
+            try {
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("key", apiKey)
+                        .addFormDataPart("image", file.getName(),
+                                RequestBody.create(file.getBytes(), MediaType.parse("application/octet-stream")))
+                        .build();
 
-    //         apartment2.getPhotos().get(0).setPhoto(apartment.getPhotos().get(0).getPhoto());
-    //         apartment2.getPhotos().get(1).setPhoto(apartment.getPhotos().get(1).getPhoto());
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
 
-    //         apartment.setPhotos(apartment2.getPhotos());
+                Call call = client.newCall(request);
+                Response response = call.execute();
 
-    //         apartmentService.save(apartment);
-    //         return "redirect:/employee";
-    //     }
+                if (response.isSuccessful()) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    String responseData = response.body().string();
+                    JsonNode jsonNode = mapper.readTree(responseData);
+                    String imgUrl = jsonNode.get("data").get("url").asText();
+                    ApartmentPhoto photo1 = new ApartmentPhoto();
+                    photo1.setApartment(apartment);
+                    photo1.setPhoto(imgUrl);
 
-    //     // Dodanie nowego mieszkania
-    //     apartment.getPhotos().get(0).setApartment(apartment);
-    //     apartment.getPhotos().get(1).setApartment(apartment);
+                    if (currentApartment == null) {
+                        photos.add(photo1);
+                    }
+                    // jesli aktualizujemy zdjecie
+                    else {
+                        photo1.setId(currentApartment.getPhotos().get(0).getId());
+                        photos.add(photo1);
+                    }
+                } else {
+                    ApartmentPhoto photo2 = new ApartmentPhoto();
+                    photo2.setApartment(apartment);
+                    photos.add(photo2);
+                    System.out.println("Błąd podczas przesyłania pliku do ImgBB. Kod błędu: " + response.code());
+                }
 
-    //     apartmentService.save(apartment);
-    //     return "redirect:/employee";
-    // }
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-    // // Dodawanie apartamentu
-    // @PostMapping("/addApartment")
-    // public String addApartment(@ModelAttribute("apartment") Apartment apartment, @RequestParam("photo") MultipartFile file) {
-    //     // Pobierz aktualnie zalogowanego użytkownika
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     User user = userService.findByEmail(authentication.getName());
+        
+        // Jeśli jedno zdjecie istniało i nie chcemy dodać nowego
+        if (file2.isEmpty() && currentApartment != null && apartmentService.findById(currentApartment.getId()).getPhotos().get(1) != null) {
+            photos.add(currentApartment.getPhotos().get(1));
+        } else {
+            try {
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("key", apiKey)
+                        .addFormDataPart("image", file2.getName(),
+                                RequestBody.create(file2.getBytes(), MediaType.parse("application/octet-stream")))
+                        .build();
 
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
 
-    //     apartment.setUser(user);
-    //     apartment.setBusiness(user.getBusiness());
+                Call call = client.newCall(request);
+                Response response = call.execute();
 
-    //     OkHttpClient client = new OkHttpClient();
-    //     String apiKey = "590b6dca1f950b224ae9d8d8afb6e8e8";
-    //     String url = "https://api.imgbb.com/1/upload";
+                if (response.isSuccessful()) {
+                    ObjectMapper mapper = new ObjectMapper();
 
-    //     if (businessService.findById(business.getId()).getLogo() == null) {
+                    String responseData = response.body().string();
+                    JsonNode jsonNode = mapper.readTree(responseData);
+                    String imgUrl = jsonNode.get("data").get("url").asText();
 
-    //         try {
-    //             Apartment apartment2 = apartmentService.findById(apartment.getId());
+                    ApartmentPhoto photo2 = new ApartmentPhoto();
+                    photo2.setApartment(apartment);
+                    photo2.setPhoto(imgUrl);
 
-    //             RequestBody requestBody = new MultipartBody.Builder()
-    //                     .setType(MultipartBody.FORM)
-    //                     .addFormDataPart("key", apiKey)
-    //                     .addFormDataPart("image", file.getName(),
-    //                             RequestBody.create(file.getBytes(), MediaType.parse("application/octet-stream")))
-    //                     .build();
-
-    //             Request request = new Request.Builder()
-    //                     .url(url)
-    //                     .post(requestBody)
-    //                     .build();
-
-    //             Call call = client.newCall(request);
-    //             Response response = call.execute();
-
-    //             if (response.isSuccessful()) {
-    //                 ObjectMapper mapper = new ObjectMapper();
-
-    //                 String responseData = response.body().string();
-    //                 JsonNode jsonNode = mapper.readTree(responseData);
-    //                 String imgUrl = jsonNode.get("data").get("url").asText();
-
-    //                 business.setLogo(imgUrl);
+                    if (currentApartment == null) {
+                        photos.add(photo2);
+                    }
+                    // jesli aktualizujemy zdjecie
+                    else {
+                        photo2.setId(currentApartment.getPhotos().get(1).getId());
+                        photos.add(photo2);
+                    }
                     
-    //             } else {
-    //                 System.out.println("Błąd podczas przesyłania pliku do ImgBB. Kod błędu: " + response.code());
-    //             }
+                } else {
+                    ApartmentPhoto photo2 = new ApartmentPhoto();
+                    photo2.setApartment(apartment);
+                    photos.add(photo2);
+                    System.out.println("Błąd podczas przesyłania pliku do ImgBB. Kod błędu: " + response.code());
+                }
 
-    //             response.close();
-    //         } catch (IOException e) {
-    //             e.printStackTrace();
-    //         }
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
 
-    //     if (apartment.getId() != 0) {
-    //         // Aktualizacja istniejacego mieszkania
+        // if (photos.size() < 2) {
+        //     ApartmentPhoto photo2 = new ApartmentPhoto();
+        //     photo2.setApartment(apartment);
+        //     photos.add(photo2);
+        // }
 
-    //         apartment2.getPhotos().get(0).setPhoto(apartment.getPhotos().get(0).getPhoto());
-    //         apartment2.getPhotos().get(1).setPhoto(apartment.getPhotos().get(1).getPhoto());
-
-    //         apartment.setPhotos(apartment2.getPhotos());
-
-    //         apartmentService.save(apartment);
-    //         return "redirect:/employee";
-    //     }
-
-    //     // Dodanie nowego mieszkania
-    //     apartment.getPhotos().get(0).setApartment(apartment);
-    //     apartment.getPhotos().get(1).setApartment(apartment);
-
-    //     apartmentService.save(apartment);
-    //     return "redirect:/employee";
-    // }
-
+        apartment.setPhotos(photos);
+        apartment.setUser(user);
+        apartment.setBusiness(user.getBusiness());
+        apartmentService.save(apartment);
+        return "redirect:/employee";
+    }
 
     // Wyswietlenie apartamentów zalogowanego użytkownika
     @GetMapping("/apartments")
@@ -303,7 +342,6 @@ public class EmployeeController {
         Optional<Contract> contract = contractRepository.findById(contractId);
         if (contract.isPresent()) {
        
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(authentication.getName());
 
@@ -313,7 +351,6 @@ public class EmployeeController {
         .filter(apartment -> apartment.getContract() == null)
         .collect(Collectors.toList());
 
-           
         theModel.addAttribute("contract", contract.get());
         theModel.addAttribute("apartments", apartmentsWithoutContract);
         }
@@ -325,6 +362,7 @@ public class EmployeeController {
                                 /*  ZARZADZANIE USTERKAMI */
     /* --------------------------------------------------------------------------------- */
 
+    // Wyświetlenie wszystkich umów użytkownika
     @GetMapping("/defects")
     public String getDefects(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -349,6 +387,7 @@ public class EmployeeController {
                                     /*  ZARZADZANIE MAILAMI */
     /* --------------------------------------------------------------------------------- */
 
+    // Wyświetlenie wszystkich maili użytkownika
     @GetMapping("/mails")
     public String getMails(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
