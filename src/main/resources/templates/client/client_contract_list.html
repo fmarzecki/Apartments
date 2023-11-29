@@ -45,10 +45,18 @@
                                 <td th:text="${contract.paymentDay}"></td>
                                 <td th:text="${contract.apartment.address}"></td>
                                 <td>
-                                    <div class="d-flex justify-content-end mb-1">
+                                    <div th:if="${contract.isSigned}" class="d-flex justify-content-end mb-1">
                                         <a th:href="@{/client/showDefectForm(contractId=${contract.id})}"
                                             style="margin-right: 5px;" class="btn btn-primary btn-sm ml-3">
                                             Zgłoś usterke
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div th:if="${!contract.isSigned}" class="d-flex justify-content-end mb-1">
+                                        <a th:href="@{/client/signContract(contractId=${contract.id})}"
+                                            style="margin-right: 5px;" class="btn btn-primary btn-sm ml-3">
+                                            Podpisz umowe
                                         </a>
                                     </div>
                                 </td>

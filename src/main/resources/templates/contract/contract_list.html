@@ -34,6 +34,7 @@
                                 <th>Dzień Płatności</th>
                                 <th>Klient</th>
                                 <th>Mieszkanie</th>
+                                <th>Podpisano</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,6 +47,8 @@
                                 <td th:text="${contract.paymentDay}"></td>
                                 <td th:text="${contract.user.email}"></td>
                                 <td th:text="${contract.apartment.address}"></td>
+                                <td th:if="${contract.isSigned}" th:text="Tak"></td>
+                                <td th:if="${!contract.isSigned}" th:text="Nie"></td>
                                 <td>
                                     <div class="d-flex justify-content-end">
                                         <a th:href="@{/employee/contract/showFormUpdate(contractId=${contract.id})}"

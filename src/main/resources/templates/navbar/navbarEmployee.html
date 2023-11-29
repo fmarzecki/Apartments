@@ -52,7 +52,7 @@
         </li>
       </ul>
 
-      <p><span sec:authentication="name"></span></p>
+      <span style="font-size: smaller;" sec:authentication="name"></span>
       <!-- <p style="font-size: 12px;" th:each="authority : ${#authentication.getAuthorities()}"
       th:if="${authority.getAuthority().startsWith('ROLE_')}"
       th:text="${authority.getAuthority().replaceFirst('ROLE_', ', ')}">

@@ -42,6 +42,9 @@ public class Contract {
     @Column(name = "payment_day")
     private int paymentDay;
 
+    @Column(name = "issigned")
+    private boolean isSigned;
+
     @OneToOne
     @JoinColumn(name = "apartment_id", referencedColumnName = "ID")
     private Apartment apartment;
@@ -50,7 +53,7 @@ public class Contract {
     @JoinColumn(name = "user_id", referencedColumnName = "ID")
     private User user;
 
-    public Contract(Date startDate, Date endDate, Double rent, Double deposit, String ownerAccountNumber, int paymentDay, Apartment apartment, User user) {
+    public Contract(Date startDate, Date endDate, Double rent, Double deposit, String ownerAccountNumber, int paymentDay, Apartment apartment, User user, boolean isSigned) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.rent = rent;
@@ -59,6 +62,6 @@ public class Contract {
         this.paymentDay = paymentDay;
         this.apartment = apartment;
         this.user = user;
+        this.isSigned = isSigned;
     }
-
 }

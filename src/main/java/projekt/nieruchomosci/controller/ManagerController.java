@@ -19,6 +19,7 @@ import projekt.nieruchomosci.entity.Business;
 import projekt.nieruchomosci.entity.Report;
 import projekt.nieruchomosci.entity.Role;
 import projekt.nieruchomosci.entity.User;
+import projekt.nieruchomosci.service.ApartmentService;
 import projekt.nieruchomosci.service.BusinessService;
 import projekt.nieruchomosci.service.UserService;
 
@@ -30,13 +31,16 @@ public class ManagerController {
     private final RoleRepository roleRepository;
     private final BusinessService businessService;
     private final ReportController reportController;
+    private final ApartmentService  apartmentService;
+
 
     public ManagerController(UserService userService, RoleRepository roleRepository, BusinessService businessService,
-            ReportController reportController) {
+            ReportController reportController, ApartmentService apartmentService) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.businessService = businessService;
         this.reportController = reportController;
+        this.apartmentService = apartmentService;
     }
 
     // Wyswietl informacje na temat firmy managera
@@ -117,6 +121,9 @@ public class ManagerController {
     // Usun pracownika
     @GetMapping("/deleteEmployee")
     public String deleteEmployee(@RequestParam("employeeEmail") String employeeEmail, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+
         User employee = userService.findByEmail(employeeEmail);
         model.addAttribute("business", employee.getBusiness()); 
 
@@ -126,6 +133,12 @@ public class ManagerController {
             employee.getRoles().remove(roleRepository.findRoleByName("ROLE_EMPLOYEE"));
             employee.setBusiness(null);
             employee.setIsManager(null);
+
+            for (Apartment apartment : employee.getApartments()) {
+                apartment.setUser(user);
+                apartmentService.save(apartment);
+            }
+
             userService.update(employee);
             return "manager/business_employee";
         }

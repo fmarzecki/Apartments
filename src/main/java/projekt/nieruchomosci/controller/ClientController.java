@@ -103,6 +103,20 @@ public class ClientController {
         return "client/client_defect_form";
     }
 
+    // Wyswietl formularz do wyslania usterki
+    @GetMapping("/signContract")
+    public String signContract(@RequestParam("contractId") Long contractId, Model model) {
+        Optional<Contract> contract = contractRepository.findById(contractId);
+        if (!contract.isPresent()) {
+            return "redirect:/client/contracts";
+        }
+
+        contract.get().setSigned(true);
+        contractRepository.save(contract.get());
+        return "redirect:/client/contracts";
+    }
+
+
     // Wyswietl formularz do wyslania maila
     @GetMapping("/showMailForm")
     public String showMailForm(@RequestParam("apartmentId") int apartmentId, Model model) {
@@ -126,6 +140,7 @@ public class ClientController {
         defectRepository.save(defect);
         return "redirect:/client/defects";
     }
+    
 
     // Dodaj maila
     @PostMapping("/addMail")

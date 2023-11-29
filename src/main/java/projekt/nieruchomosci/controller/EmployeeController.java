@@ -83,10 +83,13 @@ public class EmployeeController {
         // Pobierz aktualnie zalogowanego użytkownika
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(authentication.getName());
+
         Apartment currentApartment = apartmentService.findById(apartment.getId());
+
         OkHttpClient client = new OkHttpClient();
         String apiKey = "590b6dca1f950b224ae9d8d8afb6e8e8";
         String url = "https://api.imgbb.com/1/upload";      
+
         ArrayList<ApartmentPhoto> photos = new ArrayList<>();
 
         // Jesli zdjecia istaniały i nie chcemy dodać nowego
@@ -205,13 +208,6 @@ public class EmployeeController {
                 e.printStackTrace();
             }
         }
-        
-
-        // if (photos.size() < 2) {
-        //     ApartmentPhoto photo2 = new ApartmentPhoto();
-        //     photo2.setApartment(apartment);
-        //     photos.add(photo2);
-        // }
 
         apartment.setPhotos(photos);
         apartment.setUser(user);
@@ -321,6 +317,7 @@ public class EmployeeController {
         contract.setOwnerAccountNumber(apartment.getBusiness().getAccountNumber());
         // Powiąż dane wynajmującego z umową
         contract.setUser(tenant);
+        contract.setSigned(false);
         // Zapisz umowe do bazy
         contractRepository.save(contract);
         return "redirect:/employee/contract/contracts";
