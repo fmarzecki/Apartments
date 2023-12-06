@@ -46,13 +46,19 @@ public class BusinessController {
         this.roleRepository = roleRepository;
     }
 
-    // Dodawanie nowego/aktualizacja firmy
+    // Dodawanie nowej firmy/aktualizacja firmy
     @PostMapping
     public String addBusiness(@ModelAttribute("business") Business business,
             @RequestParam("photo") MultipartFile file) {
         OkHttpClient client = new OkHttpClient();
         String apiKey = "590b6dca1f950b224ae9d8d8afb6e8e8";
         String url = "https://api.imgbb.com/1/upload";
+
+        // Jesli dodajemy firme bez zdjecia
+        if (file.isEmpty()) {
+            businessService.add(business);
+            return "redirect:/business";
+        }
 
         // Przy aktualizacji, jeśli File jest pusty ale logo juz istnieje nie chcemy go zmieniac
         if (file.isEmpty() && businessService.findById(business.getId()).getLogo() != null) {

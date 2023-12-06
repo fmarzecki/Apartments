@@ -157,7 +157,7 @@ public class ManagerController {
         int expenses = business.getEmployees().size() * 3500;
         List<Apartment> businessApartments = business.getApartments();
         for (Apartment apartment : businessApartments) {
-            if (apartment.getContract() != null) {
+            if (apartment.getContract() != null && apartment.getContract().isSigned()) {
                 numberOfContracts += 1;
                 earnings += apartment.getRent();
             }
@@ -187,4 +187,16 @@ public class ManagerController {
         model.addAttribute("business", user.getBusiness()); 
         return "manager/manager_reports";
     }
+
+    // Wyswietlenie apartamentów danej firmy
+    @GetMapping("/showApartments")
+    public String getApartments(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        User user = userService.findByEmail(currentUser);
+
+        model.addAttribute("business", user.getBusiness());
+        model.addAttribute("apartments", user.getBusiness().getApartments());
+        return "manager/business_all_apartments";
+    } 
 }

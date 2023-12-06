@@ -51,7 +51,6 @@ public class Business {
         return apartments.size();
     }
 
-
     public Business(String name, String address) {
         this.name = name;
         this.address = address;
