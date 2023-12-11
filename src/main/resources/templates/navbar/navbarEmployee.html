@@ -29,13 +29,12 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span th:if="${!hasUnreadMails && !hasUnreadDefects}">Wiadomości</span>
             <span th:if="${hasUnreadMails || hasUnreadDefects}"><strong> Wiadomości</strong></span>
-  
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" th:if="${hasUnreadMails}" th:href="@{/employee/mails}"><strong>E-mail</strong></a>
-            <a class="dropdown-item" th:if="${!hasUnreadMails}" th:href="@{/employee/mails}">E-mail</a>
-            <a class="dropdown-item" th:if="${hasUnreadDefects}" th:href="@{/employee/defects}"><strong>Usterki</strong></a>
-            <a class="dropdown-item" th:if="${!hasUnreadDefects}" th:href="@{/employee/defects}">Usterki</a>
+            <a class="dropdown-item" th:if="${hasUnreadMails }" th:href="@{/employee/mailsCheck}"><strong>E-mail</strong></a>
+            <a class="dropdown-item" th:if="${!hasUnreadMails}" th:href="@{/employee/mailsCheck}">E-mail</a>
+            <a class="dropdown-item" th:if="${hasUnreadDefects}" th:href="@{/employee/defectsCheck}"><strong>Usterki</strong></a>
+            <a class="dropdown-item" th:if="${!hasUnreadDefects}" th:href="@{/employee/defectsCheck}">Usterki</a>
           </div>
         </li>
 

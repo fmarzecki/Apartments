@@ -23,7 +23,7 @@
             <h4>Dodaj nową umowę</h4>
             <form th:action="@{/employee/contract/addContract}" th:object="${contract}" method="post">
                 <input type="hidden" class="form-control" th:field="*{id}" required>
-                
+
                 <!-- Start Date -->
                 <div class="form-group">
                     <label for="startDate">Data rozpoczęcia umowy</label>

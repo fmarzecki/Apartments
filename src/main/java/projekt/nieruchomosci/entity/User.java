@@ -1,6 +1,8 @@
 package projekt.nieruchomosci.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -57,8 +61,8 @@ public class User {
     private List<Defect> defects;
 
     // Maile klienta
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @OrderBy("creationDate DESC")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Mail> mails;
     
     @OrderBy("reportDate DESC")
@@ -68,6 +72,13 @@ public class User {
     public User(String email, String password, boolean enabled) {
         this.email = email;
         this.password = password;
+    }
+
+    public User(String email, String password, String firstName, String lastName) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public User(String email, String password, boolean enabled,

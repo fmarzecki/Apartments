@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void save(WebUser webUser) {
+	public WebUser save(WebUser webUser) {
 		User user = new User();
 
 		// assign user details to the user object
@@ -50,14 +50,19 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(webUser.getPassword()));
 		user.setFirstName(webUser.getFirstName());
 		user.setLastName(webUser.getLastName());
-		user.setBusiness(null);
 		
 		// give user default role of "client"
 		user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_CLIENT")));
 
 		// save user in the database
-		userRepository.save(user);
+		User newUser =  userRepository.save(user);
 
+		WebUser userResponse = new WebUser();
+		userResponse.setEmail(newUser.getEmail());
+		userResponse.setFirstName(newUser.getFirstName());
+		userResponse.setLastName(newUser.getLastName());
+		userResponse.setPassword(newUser.getPassword());
+		return userResponse;
 	}
 
 	public void update(User user){

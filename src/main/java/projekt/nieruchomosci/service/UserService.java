@@ -13,8 +13,7 @@ public interface UserService extends UserDetailsService {
 	User findByEmail(String userName);
 	List<User> findByBusinessId(int id);
 	List<User> findAll();
-	void save(WebUser webUser);
+	WebUser save(WebUser webUser);
 	void update(User user);
-
 
 }
