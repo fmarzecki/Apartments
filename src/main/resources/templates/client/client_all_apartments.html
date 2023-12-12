@@ -24,6 +24,27 @@
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
+                            <th>
+                                <form th:action="@{/client}" method="get" class="form-inline">
+                                    <label for="sortBy">Sortuj według:</label>
+                                    <select class="form-control" id="sortBy" name="sortBy">
+                                        <option value="address">Adres</option>
+                                        <option value="rent">Czynsz</option>
+                                        <option value="area">Powierzchnia</option>
+                                        <option value="numberOfRooms">Liczba pokoi</option>
+                                        <option value="numberOfBathrooms">Liczba łazienek</option>
+                                        <option value="hasElevator">Winda</option>
+                                        <option value="floor">Piętro</option>
+                                    </select>
+                                
+                                    <select class="form-control" id="sortDirection" name="sortDirection">
+                                        <option value="asc">Rosnąco</option>
+                                        <option value="desc">Malejąco</option>
+                                    </select>
+                                
+                                    <button type="submit" class="btn btn-primary">Sortuj</button>
+                                </form>
+                            </th>
                             <tr>
                                 <th><a th:href="@{/client(sortBy=address)}" th:text="Address"></a></th>
                                 <th><a th:href="@{/client(sortBy=rent)}" th:text="Czynsz"></a></th>
@@ -59,6 +80,17 @@
                     </table>
                 </div>
             </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <li class="page-item" th:each="pageNumber: ${#numbers.sequence(0, totalPages-1)}">
+                    <a class="page-link"
+                        th:href="@{/client(page=${pageNumber}, sortBy=${sortBy})}"
+                        th:text="${pageNumber + 1}"
+                        th:class="${pageNumber == currentPage ? 'active' : ''}">
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 

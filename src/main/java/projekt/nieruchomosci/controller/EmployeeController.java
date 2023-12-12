@@ -217,7 +217,6 @@ public class EmployeeController {
         }
 
         model.addAttribute("contracts", contracts);
-
         return "contract/contract_list";
     } 
 
@@ -283,6 +282,7 @@ public class EmployeeController {
         if (contract.isPresent()) {
             contractRepository.delete(contract.get());
         }
+
         return "redirect:/employee/contract/contracts";
     }
 
@@ -290,20 +290,22 @@ public class EmployeeController {
     @GetMapping("/contract/showFormUpdate")
     public String showContractFormUpdate(@RequestParam("contractId") Long contractId, Model theModel) {
         Optional<Contract> contract = contractRepository.findById(contractId);
+
         if (contract.isPresent()) {
-       
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByEmail(authentication.getName());
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = userService.findByEmail(authentication.getName());
 
-        // Chcemy wyświetlić tylko te apartamenty które nie mają umowy.
-        List<Apartment> apartments =  user.getApartments();
-        List<Apartment> apartmentsWithoutContract = apartments.stream()
-        .filter(apartment -> apartment.getContract() == null)
-        .collect(Collectors.toList());
+            // Chcemy wyświetlić tylko te apartamenty które nie mają umowy.
+            List<Apartment> apartments =  user.getApartments();
 
-        theModel.addAttribute("contract", contract.get());
-        theModel.addAttribute("apartments", apartmentsWithoutContract);
+            List<Apartment> apartmentsWithoutContract = apartments.stream()
+            .filter(apartment -> apartment.getContract() == null)
+            .collect(Collectors.toList());
+
+            theModel.addAttribute("contract", contract.get());
+            theModel.addAttribute("apartments", apartmentsWithoutContract);
         }
+
         return "contract/contract_form";
     }
 
@@ -378,6 +380,7 @@ public class EmployeeController {
         User user = userService.findByEmail(authentication.getName());
 
         List<Apartment> apartments =  user.getApartments();
+        
         List<Mail> mails = new ArrayList<>();
         for (Apartment apartment : apartments) {
             for (Mail mail : apartment.getMails()) {

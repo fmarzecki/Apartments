@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +38,6 @@ public class ClientController {
     DefectRepository defectRepository;
     MailRepository mailRepository;
     UserService userService;
-    int sortFlag = 0;
 
     public ClientController(ApartmentService apartmentService, ContractRepository contractRepository,
             DefectRepository defectRepository, MailRepository mailRepository, UserService userService) {
@@ -48,31 +50,39 @@ public class ClientController {
 
     // Wyswietl dostepne apartamenty do wynajecia
     @GetMapping
-    public String getApartments(Model model, @RequestParam(name = "sortBy", required = false) String sortBy) {
-        // Pobierz apartamenty które nie są wynajęte
+    public String getApartments(
+        Model model, 
+        @RequestParam(name = "sortBy", defaultValue = "") String sortBy,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "5") int size,
+        @RequestParam(name = "sortDirection", defaultValue = "") String sortDirection) {
+
         Sort sort;
-        List<Apartment> apartments;
-        if (sortBy != null) {
-            if (sortFlag == 0) {
-                sort = Sort.by(sortBy).ascending().descending();
-                sortFlag = 1;
+        Pageable pageable;
+        Page<Apartment> apartmentsPage;
+
+        if (!sortBy.equals("")) {
+            if (sortDirection.equals("asc")) {
+                sort = Sort.by(sortBy).ascending();
             } else {
-                sort = Sort.by(sortBy).ascending().ascending();
-                sortFlag = 0;
+                sort = Sort.by(sortBy).descending();
             }
-            apartments = apartmentService.findAll(sort);
-
+            pageable = PageRequest.of(page, size, sort);
+            apartmentsPage = apartmentService.findAll(pageable);
         } else {
-            apartments = apartmentService.findAll();
-
+            pageable = PageRequest.of(page, size);
+            apartmentsPage = apartmentService.findAll(pageable);
         }
 
-
-        List<Apartment> apartmentsWithoutContract = apartments.stream()
+        // Pobierz apartamenty które nie są wynajęte
+        List<Apartment> apartmentsWithoutContract = apartmentsPage.getContent().stream()
                 .filter(apartment -> apartment.getContract() == null)
                 .collect(Collectors.toList());
 
+        model.addAttribute("sortBy", sortBy);
         model.addAttribute("apartments", apartmentsWithoutContract);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", apartmentsPage.getTotalPages());
         return "client/client_all_apartments";
     }
 

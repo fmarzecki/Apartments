@@ -3,6 +3,8 @@ package projekt.nieruchomosci.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -45,4 +47,10 @@ public class ApartmentServiceImpl implements ApartmentService{
 	public List<Apartment> findAll(Sort sort) {
 		return aparmentRepository.findAll(sort);
 	}
+
+    @Override
+    public Page<Apartment> findAll(Pageable pageable) {
+        return aparmentRepository.findAll(pageable);
+    }
+    
 }

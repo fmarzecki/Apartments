@@ -30,39 +30,36 @@ public class UserServiceTests {
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
-  @Test
-public void UserService_SaveUser_ReturnUserNotNull() {
-    // Arrange
-    User user = User.builder()
-            .email("ela@wp.pl")
-            .lastName("Kowal")
-            .firstName("Ela")
-            .password("test123")
-            .build();
+    @Test
+    public void UserService_SaveUser_ReturnUserNotNull() {
+        // Arrange
+        User user = User.builder()
+                .email("ela@wp.pl")
+                .lastName("Kowal")
+                .firstName("Ela")
+                .password("test123")
+                .build();
 
-    WebUser webUser = WebUser.builder()
-            .email("ela@wp.pl")
-            .lastName("Kowal")
-            .firstName("Ela")
-            .password("test123")
-            .build();
+        WebUser webUser = WebUser.builder()
+                .email("ela@wp.pl")
+                .lastName("Kowal")
+                .firstName("Ela")
+                .password("test123")
+                .build();
 
-    Role role = new Role("ROLE_CLIENT");
+        Role role = new Role("ROLE_CLIENT");
 
-    // Use ArgumentCaptor to capture the actual User passed to userRepository.save()
+        // Act
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        when(roleRepository.findRoleByName(Mockito.anyString())).thenReturn(role);
+        when(passwordEncoder.encode(Mockito.anyString())).thenReturn("mockedEncodedPassword");
 
-    // Act
-    when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-    when(roleRepository.findRoleByName(Mockito.anyString())).thenReturn(role);
-    when(passwordEncoder.encode(Mockito.anyString())).thenReturn("mockedEncodedPassword");
+        WebUser savedUser = userServiceImpl.save(webUser);
 
-    WebUser savedUser = userServiceImpl.save(webUser);
-
-    // Asser
-    Assertions.assertThat(savedUser).isNotNull();
-    Assertions.assertThat(savedUser.getEmail()).isEqualTo(webUser.getEmail());
-    // Assertions.assertThat(savedUser.getPassword()).isNotEqualTo(webUser.getPassword());
-}
-    // @Test
-    // public void UserService_GetAllUser_ReturnsUsers
+        // Asser
+        Assertions.assertThat(savedUser).isNotNull();
+        Assertions.assertThat(savedUser.getEmail()).isEqualTo(webUser.getEmail());
+        // Assertions.assertThat(savedUser.getPassword()).isNotEqualTo(webUser.getPassword());
+    }
+    
 }
