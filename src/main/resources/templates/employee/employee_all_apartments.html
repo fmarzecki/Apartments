@@ -24,6 +24,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Data dodania</th>
                                 <th>Adres</th>
                                 <th>Czynsz</th>
                                 <th>Wynajęte</th>
@@ -32,6 +33,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="apartment: ${apartments}">
+                                <td th:text="${apartment.creationDate}"></td>
                                 <td>
                                     <a th:href="@{/apartment/{id}(id=${apartment.id})}"
                                         th:text="${apartment.address}">
@@ -64,6 +66,41 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <ul class="pagination">
+                <!-- First and Previous Page Links -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/employee/apartments(currentPage=1, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="First">
+                        &laquo;&laquo;
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/employee/apartments(currentPage=${currentPage - 1}, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="Previous">
+                        &laquo;
+                    </a>
+                </li>
+        
+                <!-- Dynamic Page Links -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(currentPage > 5 ? currentPage - 4 : 1, currentPage < totalPages - 4 ? currentPage + 4 : totalPages)}"
+                    th:classappend="${i == currentPage} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/employee/apartments(currentPage=${i}, sortBy=${sortBy}, sortDirection=${sortDirection})}" th:text="${i}">
+                    </a>
+                </li>
+        
+                <!-- Next and Last Page Links -->
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">  
+                    <a class="page-link" th:href="@{/employee/apartments(currentPage=${currentPage +1}, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="Next">
+                        &raquo;
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/employee/apartments(currentPage=${totalPages}, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="Last">
+                        &raquo;&raquo;
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
     </div>
 
 

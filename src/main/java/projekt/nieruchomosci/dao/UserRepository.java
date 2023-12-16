@@ -9,4 +9,6 @@ import projekt.nieruchomosci.entity.User;
 public interface UserRepository  extends JpaRepository<User, Long>{
     User findByEmail(String email);
     List<User> findByBusinessId(int id);
+
+    
 }

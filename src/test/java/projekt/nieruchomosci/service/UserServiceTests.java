@@ -56,10 +56,9 @@ public class UserServiceTests {
 
         WebUser savedUser = userServiceImpl.save(webUser);
 
-        // Asser
+        // Assert
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser.getEmail()).isEqualTo(webUser.getEmail());
-        // Assertions.assertThat(savedUser.getPassword()).isNotEqualTo(webUser.getPassword());
     }
     
 }

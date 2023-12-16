@@ -25,6 +25,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Nazwa</th>
                                 <th>Adres</th>
                                 <th>Liczba Pracowników</th> 
@@ -33,6 +34,13 @@
                         </thead>
                         <tbody>
                             <tr th:each="business : ${businesses}">
+                                <td>
+                                    <img th:if="${business.logo != null}" th:src="${business.logo}" style="  
+                                    height: auto;
+                                    width: auto;
+                                    max-height: 50px;
+                                    max-width: 50px;" alt="cropped-nova-capital-logo">
+                                </td>
                                 <td>
                                     <a th:href="@{/business/employeesByBusiness(businessId=${business.id})}"
                                         th:text="${business.name}">

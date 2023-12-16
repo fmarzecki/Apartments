@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import projekt.nieruchomosci.entity.Apartment;
+import projekt.nieruchomosci.entity.Business;
+import projekt.nieruchomosci.entity.User;
 
 public interface ApartmentService {
     Apartment findById(int id);
@@ -15,4 +17,7 @@ public interface ApartmentService {
     List<Apartment> findAll();
     List<Apartment> findAll(Sort sort);
     Page<Apartment> findAll(Pageable pageable);
+    Page<Apartment> findApartmentsWithoutContract(Pageable pageable);
+    Page<Apartment> findApartmentsByEmployee(Pageable pageable, User user);
+    Page<Apartment> findApartmentsByBusiness(Pageable pageable, Business business);
 }

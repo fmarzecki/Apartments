@@ -3,6 +3,9 @@ package projekt.nieruchomosci.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -190,13 +193,24 @@ public class ManagerController {
 
     // Wyswietlenie apartamentów danej firmy
     @GetMapping("/showApartments")
-    public String getApartments(Model model) {
+    public String getApartments(
+            Model model,
+            @RequestParam(name = "currentPage", defaultValue = "1") int page,
+            @RequestParam(name = "size",defaultValue = "10") int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
         User user = userService.findByEmail(currentUser);
 
+        Pageable pageable;
+        Page<Apartment> apartmentsPage;
+
+        pageable = PageRequest.of(page-1, size);
+        apartmentsPage = apartmentService.findApartmentsByBusiness(pageable, user.getBusiness());
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", apartmentsPage.getTotalPages());
         model.addAttribute("business", user.getBusiness());
-        model.addAttribute("apartments", user.getBusiness().getApartments());
+        model.addAttribute("apartments", apartmentsPage.getContent());
         return "manager/business_all_apartments";
-    } 
+    }
 }

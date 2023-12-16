@@ -32,7 +32,6 @@ import projekt.nieruchomosci.service.UserService;
 @Controller
 @RequestMapping("/client")
 public class ClientController {
-
     ApartmentService apartmentService;
     ContractRepository contractRepository;
     DefectRepository defectRepository;
@@ -53,8 +52,8 @@ public class ClientController {
     public String getApartments(
         Model model, 
         @RequestParam(name = "sortBy", defaultValue = "") String sortBy,
-        @RequestParam(name = "page", defaultValue = "0") int page,
-        @RequestParam(name = "size", defaultValue = "5") int size,
+        @RequestParam(name = "currentPage", defaultValue = "1") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
         @RequestParam(name = "sortDirection", defaultValue = "") String sortDirection) {
 
         Sort sort;
@@ -67,21 +66,17 @@ public class ClientController {
             } else {
                 sort = Sort.by(sortBy).descending();
             }
-            pageable = PageRequest.of(page, size, sort);
-            apartmentsPage = apartmentService.findAll(pageable);
+            pageable = PageRequest.of(page-1, size, sort);
+            apartmentsPage = apartmentService.findApartmentsWithoutContract(pageable);
         } else {
-            pageable = PageRequest.of(page, size);
-            apartmentsPage = apartmentService.findAll(pageable);
+            pageable = PageRequest.of(page-1, size);
+            apartmentsPage = apartmentService.findApartmentsWithoutContract(pageable);
         }
 
-        // Pobierz apartamenty które nie są wynajęte
-        List<Apartment> apartmentsWithoutContract = apartmentsPage.getContent().stream()
-                .filter(apartment -> apartment.getContract() == null)
-                .collect(Collectors.toList());
-
+        model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("sortBy", sortBy);
-        model.addAttribute("apartments", apartmentsWithoutContract);
-        model.addAttribute("currentPage", page);
+        model.addAttribute("apartments", apartmentsPage.getContent());
+        model.addAttribute("currentPage", page+1);
         model.addAttribute("totalPages", apartmentsPage.getTotalPages());
         return "client/client_all_apartments";
     }

@@ -31,7 +31,7 @@ public class SecurityConfig {
             configurer
                 .requestMatchers("/employee/**").hasRole("EMPLOYEE")
                 .requestMatchers("/manager/**").hasRole("MANAGER")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/business/**").hasRole("ADMIN")
                 .requestMatchers("/register/**").permitAll()
                 .anyRequest().authenticated() // Every request has to be authenticated
         )

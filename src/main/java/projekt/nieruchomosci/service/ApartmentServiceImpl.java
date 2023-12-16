@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import projekt.nieruchomosci.dao.ApartmentRepository;
 import projekt.nieruchomosci.entity.Apartment;
+import projekt.nieruchomosci.entity.Business;
+import projekt.nieruchomosci.entity.User;
 
 @Service
 public class ApartmentServiceImpl implements ApartmentService{
@@ -52,5 +54,21 @@ public class ApartmentServiceImpl implements ApartmentService{
     public Page<Apartment> findAll(Pageable pageable) {
         return aparmentRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<Apartment> findApartmentsWithoutContract(Pageable pageable) {
+        return aparmentRepository.findApartmentsWithoutContract(pageable);
+    }
+
+    @Override
+    public Page<Apartment> findApartmentsByEmployee(Pageable pageable, User user) {
+        return aparmentRepository.findApartmentsByEmployee(pageable, user);
+    }
+
+    @Override
+    public Page<Apartment> findApartmentsByBusiness(Pageable pageable, Business business) {
+        return aparmentRepository.findApartmentsByBusiness(pageable, business);
+    }
+    
     
 }

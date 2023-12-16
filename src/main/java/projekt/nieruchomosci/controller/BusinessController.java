@@ -55,7 +55,7 @@ public class BusinessController {
         String url = "https://api.imgbb.com/1/upload";
 
         // Jesli dodajemy firme bez zdjecia
-        if (file.isEmpty()) {
+        if (file.isEmpty() && business.getId() == null) {
             businessService.add(business);
             return "redirect:/business";
         }

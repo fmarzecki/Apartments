@@ -24,35 +24,44 @@
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
-                            <th>
-                                <form th:action="@{/client}" method="get" class="form-inline">
-                                    <label for="sortBy">Sortuj według:</label>
-                                    <select class="form-control" id="sortBy" name="sortBy">
-                                        <option value="address">Adres</option>
-                                        <option value="rent">Czynsz</option>
-                                        <option value="area">Powierzchnia</option>
-                                        <option value="numberOfRooms">Liczba pokoi</option>
-                                        <option value="numberOfBathrooms">Liczba łazienek</option>
-                                        <option value="hasElevator">Winda</option>
-                                        <option value="floor">Piętro</option>
-                                    </select>
-                                
-                                    <select class="form-control" id="sortDirection" name="sortDirection">
-                                        <option value="asc">Rosnąco</option>
-                                        <option value="desc">Malejąco</option>
-                                    </select>
-                                
-                                    <button type="submit" class="btn btn-primary">Sortuj</button>
-                                </form>
-                            </th>
                             <tr>
-                                <th><a th:href="@{/client(sortBy=address)}" th:text="Address"></a></th>
-                                <th><a th:href="@{/client(sortBy=rent)}" th:text="Czynsz"></a></th>
-                                <th><a th:href="@{/client(sortBy=area)}" th:text="Powierzchnia"></a></th>
-                                <th><a th:href="@{/client(sortBy=numberOfRooms)}" ><span>Liczba pokoi</span></a></th>
-                                <th><a th:href="@{/client(sortBy=numberOfBathrooms)}"><span>Liczba łazienek</span></a></th>
-                                <th><a th:href="@{/client(sortBy=hasElevator)}" th:text="Winda"></a></th>
-                                <th><a th:href="@{/client(sortBy=floor)}" th:text="Piętro"></a></th>
+                                <form th:action="@{/client}" method="GET" class="form-inline">
+
+                                   <th> 
+                                        <label for="sortBy">Sortuj według:</label>
+
+                                        <select class="form-control" id="sortBy" name="sortBy" th:value="${sortBy}">
+                                        <option value="address" th:selected="${sortBy == 'address'}">Adres</option>
+                                        <option value="rent" th:selected="${sortBy == 'rent'}">Czynsz</option>
+                                        <option value="area" th:selected="${sortBy == 'area'}">Powierzchnia</option>
+                                        <option value="numberOfRooms" th:selected="${sortBy == 'numberOfRooms'}">Liczba pokoi</option>
+                                        <option value="numberOfBathrooms" th:selected="${sortBy == 'numberOfBathrooms'}">Liczba łazienek</option>
+                                        <option value="hasElevator" th:selected="${sortBy == 'hasElevator'}">Winda</option>
+                                        <option value="floor" th:selected="${sortBy == 'floor'}">Piętro</option>
+                                        </select>
+                                    </th>
+                                
+                                    <th>
+                                        <select class="form-control" id="sortDirection" name="sortDirection">
+                                            <option value="asc" th:selected="${sortDirection == 'asc'}">Rosnąco</option>
+                                            <option value="desc" th:selected="${sortDirection == 'desc'}">Malejąco</option>
+                                        </select>
+                                    </th>
+
+                                    <th>
+                                        <button type="submit" class="btn btn-primary">Sortuj</button>
+                                    </th>
+
+                                </form>
+                            </tr>
+                            <tr>
+                                <th>Adres</th>
+                                <th>Czynsz</th>
+                                <th>Powierzchnia</th>
+                                <th>Liczba pokoi</th>
+                                <th>Liczba łazienek</th>
+                                <th>Winda</th>
+                                <th>Piętro</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -81,13 +90,36 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center align-items-center">
             <ul class="pagination">
-                <li class="page-item" th:each="pageNumber: ${#numbers.sequence(0, totalPages-1)}">
-                    <a class="page-link"
-                        th:href="@{/client(page=${pageNumber}, sortBy=${sortBy})}"
-                        th:text="${pageNumber + 1}"
-                        th:class="${pageNumber == currentPage ? 'active' : ''}">
+                <!-- First and Previous Page Links -->
+                <li class="page-item" th:classappend="${currentPage == 2} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/client(currentPage=1, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="First">
+                        &laquo;&laquo;
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == 2} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/client(currentPage=${currentPage - 2}, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="Previous">
+                        &laquo;
+                    </a>
+                </li>
+        
+                <!-- Dynamic Page Links -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(currentPage > 5 ? currentPage - 4 : 1, currentPage < totalPages - 4 ? currentPage + 4 : totalPages)}"
+                    th:classappend="${i == currentPage-1} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/client(currentPage=${i}, sortBy=${sortBy}, sortDirection=${sortDirection})}" th:text="${i}">
+                    </a>
+                </li>
+        
+                <!-- Next and Last Page Links -->
+                <li class="page-item" th:classappend="${currentPage == totalPages+1} ? 'disabled' : ''">  
+                    <a class="page-link" th:href="@{/client(currentPage=${currentPage}, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="Next">
+                        &raquo;
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages+1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/client(currentPage=${totalPages}, sortBy=${sortBy}, sortDirection=${sortDirection})}" aria-label="Last">
+                        &raquo;&raquo;
                     </a>
                 </li>
             </ul>

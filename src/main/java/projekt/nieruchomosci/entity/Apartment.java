@@ -16,6 +16,7 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
+import java.sql.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -54,6 +55,9 @@ public class Apartment {
 
     @Column(name = "rent")
     private double rent;
+
+    @Column(name = "creation_date", insertable = false, updatable = false)
+    private Date creationDate;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "ID")

@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -80,6 +84,7 @@ public class EmployeeController {
         Apartment currentApartment = apartmentService.findById(apartment.getId());
         ArrayList<ApartmentPhoto> photos = new ArrayList<>();
 
+
         // Jesli chcemy dodac apartament bez zdjecia
         if (file.isEmpty() && file2.isEmpty() && currentApartment == null) {
             ApartmentPhoto photo1 = new ApartmentPhoto();
@@ -108,7 +113,6 @@ public class EmployeeController {
             return "redirect:/employee";
         }
 
-
         // Jeśli jedno zdjecie istniało i nie chcemy dodać nowego
         if (file.isEmpty() && currentApartment != null && apartmentService.findById(currentApartment.getId()).getPhotos().get(0) != null) {
             photos.add(currentApartment.getPhotos().get(0));
@@ -117,8 +121,10 @@ public class EmployeeController {
         else {
             Response response = employeeService.sendPhoto(file);
             String imgUrl = employeeService.handleResponse(response);
-            ApartmentPhoto photo = new ApartmentPhoto();
+            response.close();
 
+            ApartmentPhoto photo = new ApartmentPhoto();
+            
             System.out.println("File 1" + imgUrl);
             photo.setApartment(apartment);
             photo.setPhoto(imgUrl);
@@ -143,6 +149,8 @@ public class EmployeeController {
         else {
             Response response = employeeService.sendPhoto(file2);
             String imgUrl = employeeService.handleResponse(response);
+            response.close();
+
             ApartmentPhoto photo = new ApartmentPhoto();
 
             System.out.println("File 2" + imgUrl);
@@ -169,15 +177,26 @@ public class EmployeeController {
 
     // Wyswietlenie apartamentów zalogowanego użytkownika
     @GetMapping("/apartments")
-    public String getApartments(Model model) {
+    public String getApartments(
+            Model model,
+            @RequestParam(name = "currentPage", defaultValue = "1") int page,
+            @RequestParam(name = "size",defaultValue = "10") int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
         User user = userService.findByEmail(currentUser);
 
+        Pageable pageable;
+        Page<Apartment> apartmentsPage;
+
+        pageable = PageRequest.of(page-1, size);
+        apartmentsPage = apartmentService.findApartmentsByEmployee(pageable, user);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", apartmentsPage.getTotalPages());
         model.addAttribute("business", user.getBusiness());
-        model.addAttribute("apartments", user.getApartments());
+        model.addAttribute("apartments", apartmentsPage.getContent());
         return "employee/employee_all_apartments";
-    } 
+    }
 
     // Usunięcie wybranego apartamentu
     @GetMapping("/apartment/delete")
