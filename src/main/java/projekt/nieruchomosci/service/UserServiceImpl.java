@@ -1,6 +1,7 @@
 package projekt.nieruchomosci.service;
 
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(email);
+		User user = userRepository.findByEmailWithRolesEagerly(email);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
@@ -103,4 +104,9 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+	@Override
+	public User findByEmailWithRolesEagerly(String email) {
+		return userRepository.findByEmailWithRolesEagerly(email);
+	}
 }

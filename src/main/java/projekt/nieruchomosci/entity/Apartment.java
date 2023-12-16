@@ -19,6 +19,8 @@ import jakarta.persistence.GenerationType;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
@@ -67,18 +69,20 @@ public class Apartment {
     @JoinColumn(name = "business_id", referencedColumnName = "ID")
     private Business business;
 
-    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ApartmentPhoto> photos;
 
     @OneToOne(mappedBy = "apartment")
     private Contract contract;
 
+    @BatchSize(size = 10)
     @OrderBy("creationDate DESC")
-    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
     private List<Defect> defects;
     
+    @BatchSize(size = 10)
     @OrderBy("creationDate DESC")
-    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
     private List<Mail> mails;
 
     public Apartment(String photo, String address, int numberOfRooms, double area, int numberOfBathrooms, int floor,

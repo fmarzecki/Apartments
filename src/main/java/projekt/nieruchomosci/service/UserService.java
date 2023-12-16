@@ -15,5 +15,6 @@ public interface UserService extends UserDetailsService {
 	List<User> findAll();
 	WebUser save(WebUser webUser);
 	void update(User user);
+	User findByEmailWithRolesEagerly(String email);
 
 }

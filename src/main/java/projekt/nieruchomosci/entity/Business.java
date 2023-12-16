@@ -3,6 +3,8 @@ package projekt.nieruchomosci.entity;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,12 +38,14 @@ public class Business {
 
     @Column(name = "LOGO")
     private String logo;
-
+    
+    @BatchSize(size = 10)
     @OrderBy("isManager ASC")
-    @OneToMany(mappedBy = "business", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private List<User> employees;
 
-    @OneToMany(mappedBy = "business", fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private List<Apartment> apartments;
 
     public int howManyEmployees() {

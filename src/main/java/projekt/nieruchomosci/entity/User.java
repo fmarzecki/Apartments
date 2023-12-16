@@ -41,32 +41,32 @@ public class User {
     @JoinColumn(name = "ID_FIRMY", referencedColumnName = "ID")
     private Business business;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
     // Apartamenty pracownika
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Apartment> apartments;
 
     // Kontrakty klienta
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Contract> contracts;
 
     // Usterki klienta
     @OrderBy("creationDate DESC")
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Defect> defects;
 
     // Maile klienta
     @OrderBy("creationDate DESC")
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Mail> mails;
     
     @OrderBy("reportDate DESC")
-    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
     private List<Report> reports;
 
     public User(String email, String password, boolean enabled) {

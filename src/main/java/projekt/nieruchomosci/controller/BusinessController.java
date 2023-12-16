@@ -107,8 +107,7 @@ public class BusinessController {
     // Wyswietlenie listy firm
     @GetMapping
     public String getBusinesses(Model theModel) {
-        List<Business> businesses = businessService.getAll();
-        theModel.addAttribute("businesses", businesses);
+        theModel.addAttribute("businesses", businessService.getAll());
         return "business/businesses";
     }
 
