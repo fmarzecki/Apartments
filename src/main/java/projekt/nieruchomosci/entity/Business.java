@@ -1,6 +1,5 @@
 package projekt.nieruchomosci.entity;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.hibernate.annotations.BatchSize;
