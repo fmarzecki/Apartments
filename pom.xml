@@ -102,8 +102,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version> <!-- Użyj odpowiedniej wersji -->
 				<configuration>
-					<source>11</source> <!-- Wersja Java -->
-					<target>11</target> <!-- Wersja Java -->
+					<source>17</source> <!-- Wersja Java -->
+					<target>17</target> <!-- Wersja Java -->
 				</configuration>
 			</plugin>
 		</plugins>
