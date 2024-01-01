@@ -41,8 +41,8 @@
                                 </td>
                                 <td th:text="${apartment.rent}"></td>
                                 <td>
-                                    <span th:if="${apartment.contract == null}">Nie</span>
-                                    <span th:if="${apartment.contract != null}">Tak</span>
+                                    <span th:if="${apartment.contract.size() <= 0 }">Nie</span>
+                                    <span th:if="${apartment.contract.size() > 0}">Tak</span>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-end">

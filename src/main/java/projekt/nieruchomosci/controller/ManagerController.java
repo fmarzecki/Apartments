@@ -2,6 +2,7 @@ package projekt.nieruchomosci.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -159,8 +160,14 @@ public class ManagerController {
         int earnings = 0;
         int expenses = business.getEmployees().size() * 3500;
         List<Apartment> businessApartments = business.getApartments();
-        for (Apartment apartment : businessApartments) {
-            if (apartment.getContract() != null && apartment.getContract().isSigned()) {
+        
+        List<Apartment> apartmentsWithContract = businessApartments.stream()
+        .filter(apartment -> apartment.getContract().size() > 0)
+        .filter(apartment -> apartment.getContract().get(0) != null)
+        .collect(Collectors.toList());
+
+        for (Apartment apartment : apartmentsWithContract) {
+            if (apartment.getContract() != null && apartment.getContract().get(0).isSigned()) {
                 numberOfContracts += 1;
                 earnings += apartment.getRent();
             }

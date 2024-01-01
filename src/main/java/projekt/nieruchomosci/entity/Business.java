@@ -43,7 +43,7 @@ public class Business {
     @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private List<User> employees;
 
-    @BatchSize(size = 10)
+    @BatchSize(size = 50)
     @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private List<Apartment> apartments;
 

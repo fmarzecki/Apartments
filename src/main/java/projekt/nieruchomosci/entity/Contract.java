@@ -45,7 +45,7 @@ public class Contract {
     @Column(name = "issigned")
     private boolean isSigned;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "apartment_id", referencedColumnName = "ID")
     private Apartment apartment;
 

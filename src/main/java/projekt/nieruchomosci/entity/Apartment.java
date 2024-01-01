@@ -72,15 +72,16 @@ public class Apartment {
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ApartmentPhoto> photos;
 
-    @OneToOne(mappedBy = "apartment")
-    private Contract contract;
-
     @BatchSize(size = 10)
+    @OneToMany(mappedBy = "apartment",fetch = FetchType.LAZY)
+    private List<Contract> contract;
+
+    @BatchSize(size = 5)
     @OrderBy("creationDate DESC")
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
     private List<Defect> defects;
     
-    @BatchSize(size = 10)
+    @BatchSize(size = 5)
     @OrderBy("creationDate DESC")
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
     private List<Mail> mails;

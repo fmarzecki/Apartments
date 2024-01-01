@@ -225,13 +225,14 @@ public class EmployeeController {
         // Pobierz mieszkania pracownika które mają umowe
         List<Apartment> apartments =  user.getApartments();
         List<Apartment> apartmentsWithContract = apartments.stream()
-        .filter(apartment -> apartment.getContract() != null)
+        .filter(apartment -> apartment.getContract().size() > 0)
+        .filter(apartment -> apartment.getContract().get(0) != null)
         .collect(Collectors.toList());
 
         // Pobierz umowe dla każdego mieszkania
         List<Contract> contracts = new ArrayList<>();
         for (Apartment apartment : apartmentsWithContract) {
-            contracts.add(apartment.getContract());
+            contracts.add(apartment.getContract().get(0));
         }
 
         model.addAttribute("contracts", contracts);
@@ -247,7 +248,7 @@ public class EmployeeController {
         // Chcemy wyświetlić tylko te apartamenty które nie mają umowy.
         List<Apartment> apartments =  user.getApartments();
         List<Apartment> apartmentsWithoutContract = apartments.stream()
-        .filter(apartment -> apartment.getContract() == null)
+        .filter(apartment -> apartment.getContract().size() <= 0)
         .collect(Collectors.toList());
 
         Contract newContract = new Contract();
