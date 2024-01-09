@@ -28,18 +28,42 @@
                         <input type="text" th:field="*{address}" class="form-control" placeholder="Adres" required>
                     </div>
                     <div class="form-group">
-                        <label for="address">Numer konta firmy:</label>
-                        <input type="text" th:field="*{accountNumber}" class="form-control" placeholder="Adres" required>
+                        <label for="address">Numer konta firmy: (1111 1111 1111 1111)</label>
+                        <input type="text" id='accountNumber' th:field="*{accountNumber}" class="form-control" placeholder="Numer Konta" required>
                     </div>
                     <div class="form-group">
                         <label for="logo">Logo:</label>
                         <input type="file" id="photo" name="photo" accept="image/*" enctype="multipart/form-data" >
                     </div>
-                    <button type="submit" class="btn btn-info "> Zapisz Firmę </button>
+                    <button type="submit" id="submitButton" class="btn btn-info " disabled> Zapisz Firmę </button>
                 </form>
             </div>
         </div>
     </div>
+    
+    <script>
+        // Function to validate accountNumber format
+        function validateAccountNumber() {
+            var accountNumberInput = document.getElementById('accountNumber');
+            var accountNumberValue = accountNumberInput.value;
+            var regex = /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/; // Regular expression for the desired format
+            var submitButton = document.getElementById('submitButton');
+        
+            if (regex.test(accountNumberValue)) {
+                submitButton.removeAttribute('disabled'); // Enable the submit button
+            } else {
+                // alert('Account number should be in the format "n-n-n-n" where n is any digit.');
+                submitButton.setAttribute('disabled', 'disabled'); // Disable the submit button
+                return false; // Prevent form submission``
+            }
+        
+            return true; // Continue with form submission
+        }
+        
+        // Attach the validation function to the input's input event
+        var accountNumberInput = document.getElementById('accountNumber');
+        accountNumberInput.addEventListener('input', validateAccountNumber);
+    </script>
     
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
