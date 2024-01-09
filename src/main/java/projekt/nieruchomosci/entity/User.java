@@ -88,6 +88,7 @@ public class User {
         this.roles = roles;
     }
 
+    // dla kazdego apartamentu pracownika sprawdzam czy ma umowe, jesli tak dodaje
     public int howManyContracts() {
         int contracts = 0;
         for (Apartment apartment : apartments) {

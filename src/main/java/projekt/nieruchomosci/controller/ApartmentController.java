@@ -28,5 +28,4 @@ public class ApartmentController {
         return "apartment/apartment_details"; 
     }
 
-
 }

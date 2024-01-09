@@ -92,7 +92,6 @@ public class ClientController {
     // Wyswietl formularz do wyslania usterki
     @GetMapping("/showDefectForm")
     public String showDefectForm(@RequestParam("contractId") Long contractId, Model model) {
-        // TODO sprawdzic czy usterki pochodza od uzytkownika posiadajacego mieszkanie
 
         Optional<Contract> contract = contractRepository.findById(contractId);
         if (!contract.isPresent()) {
@@ -119,7 +118,6 @@ public class ClientController {
         return "redirect:/client/contracts";
     }
 
-
     // Wyswietl formularz do wyslania maila
     @GetMapping("/showMailForm")
     public String showMailForm(@RequestParam("apartmentId") int apartmentId, Model model) {
@@ -144,7 +142,6 @@ public class ClientController {
         return "redirect:/client/defects";
     }
     
-
     // Dodaj maila
     @PostMapping("/addMail")
     public String addMail(@ModelAttribute Mail mail) {

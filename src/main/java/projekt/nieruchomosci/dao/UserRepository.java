@@ -9,6 +9,7 @@ import projekt.nieruchomosci.entity.User;
 
 public interface UserRepository  extends JpaRepository<User, Long>{
     User findByEmail(String email);
+    
     List<User> findByBusinessId(int id);
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = ?1")
